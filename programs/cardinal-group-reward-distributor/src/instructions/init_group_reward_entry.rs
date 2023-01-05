@@ -61,15 +61,14 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
 
     let remaining_accounts = &mut ctx.remaining_accounts.iter();
     for i in 0..group_size {
-        let stake_entry = next_account_info(remaining_accounts)?;
-        if stake_entry.data_is_empty() || group_entry.stake_entries[i] != stake_entry.key() {
+        let stake_entry_info = next_account_info(remaining_accounts)?;
+        if stake_entry_info.data_is_empty() || group_entry.stake_entries[i] != stake_entry_info.key() {
             return Err(error!(ErrorCode::InvalidStakeEntry));
         }
 
-        let stake_entry_id = stake_entry.key();
+        let stake_entry_id = stake_entry_info.key();
 
-        let stake_entry_data = stake_entry.try_borrow_mut_data().expect("Failed to borrow data");
-        let stake_entry = StakeEntry::deserialize(&mut stake_entry_data[8..].as_ref())?;
+        let stake_entry = Account::<StakeEntry>::try_from(stake_entry_info)?;
         if !group_reward_distributor.authorized_pools.contains(&stake_entry.pool) {
             return Err(error!(ErrorCode::InvalidPool));
         }
@@ -89,7 +88,6 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
             &original_mint_metadata.to_account_info(),
             &[mpl_token_metadata::state::PREFIX.as_bytes(), mpl_token_metadata::id().as_ref(), original_mint.key().as_ref()],
         )?;
-
         if original_mint_metadata.owner.key() != mpl_token_metadata::id() {
             return Err(error!(ErrorCode::InvalidMintMetadataOwner));
         }
