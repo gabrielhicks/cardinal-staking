@@ -100,12 +100,12 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
             return Err(error!(ErrorCode::InvalidMintMetadata));
         }
 
-        let reward_entry = next_account_info(remaining_accounts)?;
-        if reward_entry.data_is_empty() {
+        let reward_entry_info = next_account_info(remaining_accounts)?;
+        if reward_entry_info.data_is_empty() {
             return Err(error!(ErrorCode::InvalidRewardEntry));
         }
-        let reward_entry_data = reward_entry.try_borrow_mut_data().expect("Failed to borrow data");
-        let reward_entry = RewardEntry::deserialize(&mut reward_entry_data[8..].as_ref())?;
+        let reward_entry = Account::<RewardEntry>::try_from(reward_entry_info)?;
+
         if stake_entry_id != reward_entry.stake_entry {
             return Err(error!(ErrorCode::InvalidRewardEntry));
         }
