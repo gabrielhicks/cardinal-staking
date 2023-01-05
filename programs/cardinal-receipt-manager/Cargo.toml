@@ -1,6 +1,6 @@
 [package]
 name = "cardinal-receipt-manager"
-version = "1.16.0"
+version = "1.16.2"
 description = "Cardinal reward receipt manager"
 edition = "2021"
 homepage = "https://cardinal.so"
