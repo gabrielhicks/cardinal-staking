@@ -75,7 +75,7 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
         }
 
         let original_mint = next_account_info(remaining_accounts)?;
-        if original_mint.data_is_empty() {
+        if original_mint.data_is_empty() || original_mint.key() != stake_entry.original_mint.key() {
             return Err(error!(ErrorCode::InvalidOriginalMint));
         }
 
