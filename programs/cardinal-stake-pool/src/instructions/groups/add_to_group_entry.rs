@@ -1,7 +1,5 @@
-use crate::utils::resize_account;
-
 use {
-    crate::{errors::ErrorCode, state::*},
+    crate::{errors::ErrorCode, state::*, utils::resize_account},
     anchor_lang::prelude::*,
 };
 
@@ -24,6 +22,9 @@ pub fn handler(ctx: Context<AddToGroupEntryCtx>) -> Result<()> {
     let group_entry = &mut ctx.accounts.group_entry;
     let stake_entry = &mut ctx.accounts.stake_entry;
 
+    if group_entry.group_cooldown_start_seconds.is_some() {
+        return Err(error!(ErrorCode::CooldownSecondRemaining));
+    }
     if stake_entry.grouped == Some(true) {
         return Err(error!(ErrorCode::GroupedStakeEntry));
     }

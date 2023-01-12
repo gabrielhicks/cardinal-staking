@@ -36,11 +36,11 @@ import {
   withAddToGroupEntry,
   withAuthorizeStakeEntry,
   withClaimReceiptMint,
-  withCloseGroupEntry,
   withInitGroupStakeEntry,
   withInitStakeEntry,
   withInitStakeMint,
   withInitStakePool,
+  withInitUngrouping,
   withRemoveFromGroupEntry,
   withStake,
   withUnstake,
@@ -692,9 +692,31 @@ export const closeGroupEntry = async (
       })
     )
   );
+  return [transaction];
+};
 
-  await withCloseGroupEntry(transaction, connection, wallet, {
+/**
+ * Convenience method to init ungrouping
+ * @param connection - Connection to use
+ * @param wallet - Wallet to use
+ * @param params
+ * groupRewardDistributorId - Group reward distributor ID
+ * groupEntryId - Group entry ID
+ * stakeEntryIds - Stake entry IDs
+ * @returns
+ */
+export const initUngrouping = async (
+  connection: Connection,
+  wallet: Wallet,
+  params: {
+    groupEntryId: PublicKey;
+  }
+): Promise<[Transaction]> => {
+  const transaction = new Transaction();
+
+  await withInitUngrouping(transaction, connection, wallet, {
     groupEntryId: params.groupEntryId,
   });
+
   return [transaction];
 };

@@ -1086,14 +1086,14 @@ export const withRemoveFromGroupEntry = async (
 };
 
 /**
- * Add close group stake entry instructions to a transaction
+ * Add init ungrouping instructions to a transaction
  * @param transaction
  * @param connection
  * @param wallet
  * @param params
  * @returns Transaction, public key for the created group stake entry
  */
-export const withCloseGroupEntry = async (
+export const withInitUngrouping = async (
   transaction: Transaction,
   connection: Connection,
   wallet: Wallet,
@@ -1103,7 +1103,7 @@ export const withCloseGroupEntry = async (
 ): Promise<[Transaction]> => {
   const program = stakePoolProgram(connection, wallet);
   const ix = await program.methods
-    .closeGroupEntry()
+    .initUngrouping()
     .accounts({
       groupEntry: params.groupEntryId,
       authority: wallet.publicKey,

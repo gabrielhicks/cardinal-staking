@@ -926,7 +926,7 @@
       "args": []
     },
     {
-      "name": "closeGroupEntry",
+      "name": "initUngrouping",
       "accounts": [
         {
           "name": "groupEntry",
@@ -937,6 +937,16 @@
           "name": "authority",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": []

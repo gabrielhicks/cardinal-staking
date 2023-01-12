@@ -149,7 +149,7 @@ describe("Group stake ungroup", () => {
       provider.wallet,
       {
         stakeEntryIds,
-        groupCooldownSeconds: 1,
+        groupStakeSeconds: 1,
       }
     );
     groupStakeEntryId = groupEntryId;
@@ -170,6 +170,10 @@ describe("Group stake ungroup", () => {
     }
   });
 
+  it("Wait for 1 seconds", async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+  });
+
   it("Start cooldown period", async () => {
     const [transaction] = await initUngrouping(
       provider.connection,
@@ -186,10 +190,6 @@ describe("Group stake ungroup", () => {
     );
 
     expect(groupStakeEntryData.parsed.groupCooldownStartSeconds).not.toBeNull();
-  });
-
-  it("Wait for 1 seconds", async () => {
-    await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
   });
 
   it("Remove 1 from group", async () => {

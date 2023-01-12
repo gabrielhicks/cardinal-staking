@@ -10,6 +10,7 @@ import {
   createGroupRewardDistributor,
   createStakePool,
   initializeRewardEntry,
+  initUngrouping,
   stake,
   unstake,
 } from "../../src";
@@ -390,6 +391,24 @@ describe("Group stake and claim rewards", () => {
       userGroupRewardMintTokenAccountId
     );
     expect(Number(checkUserRewardTokenAccount.amount)).toBeGreaterThan(1);
+  });
+
+  it("Start cooldown period", async () => {
+    const [transaction] = await initUngrouping(
+      provider.connection,
+      provider.wallet,
+      {
+        groupEntryId: groupStakeEntryId,
+      }
+    );
+    await executeTransaction(provider.connection, transaction, provider.wallet);
+
+    const groupStakeEntryData = await getGroupStakeEntry(
+      provider.connection,
+      groupStakeEntryId
+    );
+
+    expect(groupStakeEntryData.parsed.groupCooldownStartSeconds).not.toBeNull();
   });
 
   it("Close group", async () => {

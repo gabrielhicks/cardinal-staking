@@ -53,7 +53,8 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
     let reward_duration_seconds = group_reward_distributor.reward_duration_seconds;
 
     let reward_seconds_received = group_reward_entry.reward_seconds_received;
-    let total_stake_seconds = (Clock::get().unwrap().unix_timestamp - group_entry.changed_at) as u128;
+    let end_time_stamp = group_entry.group_cooldown_start_seconds.unwrap_or(Clock::get().unwrap().unix_timestamp);
+    let total_stake_seconds = (end_time_stamp - group_entry.changed_at) as u128;
     if reward_seconds_received <= total_stake_seconds
         && (group_reward_distributor.max_supply.is_none() || group_reward_distributor.rewards_issued < group_reward_distributor.max_supply.unwrap() as u128)
     {

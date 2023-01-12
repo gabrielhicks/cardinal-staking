@@ -121,7 +121,7 @@ pub mod cardinal_stake_pool {
         groups::remove_from_group_entry::handler(ctx)
     }
 
-    pub fn close_group_entry(ctx: Context<CloseGroupEntryCtx>) -> Result<()> {
-        groups::close_group_entry::handler(ctx)
+    pub fn init_ungrouping(ctx: Context<InitUngroupingCtx>) -> Result<()> {
+        groups::init_ungrouping::handler(ctx)
     }
 }

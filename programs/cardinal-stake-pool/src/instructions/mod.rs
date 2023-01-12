@@ -50,6 +50,6 @@ pub use stake_booster::update_stake_booster::*;
 // groups
 pub mod groups;
 pub use groups::add_to_group_entry::*;
-pub use groups::close_group_entry::*;
 pub use groups::init_group_entry::*;
+pub use groups::init_ungrouping::*;
 pub use groups::remove_from_group_entry::*;

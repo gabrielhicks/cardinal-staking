@@ -1,8 +1,7 @@
-use crate::utils::resize_account;
-
 use {
-    crate::{errors::ErrorCode, state::*},
+    crate::{errors::ErrorCode, state::*, utils::resize_account},
     anchor_lang::prelude::*,
+    anchor_lang::AccountsClose,
 };
 
 #[derive(Accounts)]
@@ -27,58 +26,28 @@ pub fn handler(ctx: Context<RemoveFromGroupEntryCtx>) -> Result<()> {
     if stake_entry.grouped != Some(true) {
         return Err(error!(ErrorCode::UngroupedStakeEntry));
     }
-
-    if group_entry.group_cooldown_seconds > 0 {
-        if group_entry.group_cooldown_start_seconds.is_none() {
-            group_entry.group_cooldown_start_seconds = Some(Clock::get().unwrap().unix_timestamp);
-
-            let new_space = group_entry.try_to_vec()?.len() + 8;
-
-            resize_account(
-                &group_entry.to_account_info(),
-                new_space,
-                &ctx.accounts.payer.to_account_info(),
-                &ctx.accounts.system_program.to_account_info(),
-            )?;
-
-            return Ok(());
-        } else if group_entry.group_cooldown_start_seconds.is_some()
-            && ((Clock::get().unwrap().unix_timestamp - group_entry.group_cooldown_start_seconds.unwrap()) as u32) < group_entry.group_cooldown_seconds
-        {
-            return Err(error!(ErrorCode::CooldownSecondRemaining));
-        }
-    }
-
-    if group_entry.group_stake_seconds > 0 && (Clock::get().unwrap().unix_timestamp - group_entry.changed_at) < group_entry.group_stake_seconds as i64 {
-        return Err(error!(ErrorCode::MinGroupSecondsNotSatisfied));
+    if group_entry.group_cooldown_start_seconds.is_none() || ((Clock::get().unwrap().unix_timestamp - group_entry.group_cooldown_start_seconds.unwrap()) as u32) < group_entry.group_cooldown_seconds {
+        return Err(error!(ErrorCode::CooldownSecondRemaining));
     }
 
     stake_entry.grouped = Some(false);
 
-    let mut stake_entries = group_entry.stake_entries.clone();
     if let Some(index) = group_entry.stake_entries.iter().position(|value| *value == stake_entry.key()) {
-        stake_entries.remove(index);
+        group_entry.stake_entries.remove(index);
     } else {
         return Err(error!(ErrorCode::StakeEntryNotFoundInGroup));
     }
-    let new_group_entry = GroupStakeEntry {
-        bump: group_entry.bump,
-        group_id: group_entry.group_id,
-        authority: group_entry.authority,
-        stake_entries: stake_entries.to_vec(),
-        changed_at: Clock::get().unwrap().unix_timestamp,
-        group_cooldown_seconds: group_entry.group_cooldown_seconds,
-        group_stake_seconds: group_entry.group_stake_seconds,
-        group_cooldown_start_seconds: group_entry.group_cooldown_start_seconds,
-    };
-    let new_space = new_group_entry.try_to_vec()?.len() + 8;
-    group_entry.set_inner(new_group_entry);
 
-    resize_account(
-        &group_entry.to_account_info(),
-        new_space,
-        &ctx.accounts.payer.to_account_info(),
-        &ctx.accounts.system_program.to_account_info(),
-    )?;
+    if group_entry.stake_entries.len() == 0 {
+        group_entry.close(ctx.accounts.payer.to_account_info())?;
+    } else {
+        let new_space = group_entry.try_to_vec()?.len() + 8;
+        resize_account(
+            &group_entry.to_account_info(),
+            new_space,
+            &ctx.accounts.payer.to_account_info(),
+            &ctx.accounts.system_program.to_account_info(),
+        )?;
+    }
     Ok(())
 }

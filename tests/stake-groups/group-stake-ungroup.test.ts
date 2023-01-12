@@ -3,7 +3,12 @@ import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import type { PublicKey } from "@solana/web3.js";
 import { Transaction } from "@solana/web3.js";
 
-import { createGroupEntry, createStakePool, stake } from "../../src";
+import {
+  createGroupEntry,
+  createStakePool,
+  initUngrouping,
+  stake,
+} from "../../src";
 import { ReceiptType } from "../../src/programs/stakePool";
 import {
   getGroupStakeEntry,
@@ -164,6 +169,24 @@ describe("Group stake ungroup", () => {
     }
   });
 
+  it("Start cooldown period", async () => {
+    const [transaction] = await initUngrouping(
+      provider.connection,
+      provider.wallet,
+      {
+        groupEntryId: groupStakeEntryId,
+      }
+    );
+    await executeTransaction(provider.connection, transaction, provider.wallet);
+
+    const groupStakeEntryData = await getGroupStakeEntry(
+      provider.connection,
+      groupStakeEntryId
+    );
+
+    expect(groupStakeEntryData.parsed.groupCooldownStartSeconds).not.toBeNull();
+  });
+
   it("Remove 1 from group", async () => {
     const mintId = mintId1;
     const stakeEntryId = await findStakeEntryIdFromMint(
@@ -194,7 +217,7 @@ describe("Group stake ungroup", () => {
   });
 
   it("Remove remaining from group", async () => {
-    const mintIds = [mintId2, mintId3, mintId4, mintId5, mintId6];
+    const mintIds = [mintId2, mintId3, mintId4, mintId5];
     for (let i = 0; i < mintIds.length; i++) {
       const mintId = mintIds[i]!;
       const stakeEntryId = await findStakeEntryIdFromMint(
@@ -224,10 +247,39 @@ describe("Group stake ungroup", () => {
       );
 
       expect(groupStakeEntryData.parsed.stakeEntries.length).toEqual(
-        mintIds.length - i - 1
+        mintIds.length - i
       );
       const stakeEntry = await getStakeEntry(provider.connection, stakeEntryId);
       expect(stakeEntry.parsed.grouped).toEqual(false);
     }
+  });
+
+  it("Remove last from group", async () => {
+    const mintId = mintId6;
+    const stakeEntryId = await findStakeEntryIdFromMint(
+      provider.connection,
+      provider.wallet.publicKey,
+      stakePoolId,
+      mintId
+    );
+    const [transaction] = await withRemoveFromGroupEntry(
+      new Transaction(),
+      provider.connection,
+      provider.wallet,
+      {
+        groupEntryId: groupStakeEntryId,
+        stakeEntryId,
+      }
+    );
+    await executeTransaction(provider.connection, transaction, provider.wallet);
+
+    await expect(async () => {
+      await getGroupStakeEntry(provider.connection, groupStakeEntryId);
+    }).rejects.toThrow(
+      new Error(`Account does not exist ${groupStakeEntryId.toBase58()}`)
+    );
+
+    const stakeEntry = await getStakeEntry(provider.connection, stakeEntryId);
+    expect(stakeEntry.parsed.grouped).toEqual(false);
   });
 });

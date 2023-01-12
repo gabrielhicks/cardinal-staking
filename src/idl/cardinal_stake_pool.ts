@@ -926,7 +926,7 @@ export type CardinalStakePool = {
       args: [];
     },
     {
-      name: "closeGroupEntry";
+      name: "initUngrouping";
       accounts: [
         {
           name: "groupEntry";
@@ -937,6 +937,16 @@ export type CardinalStakePool = {
           name: "authority";
           isMut: true;
           isSigner: true;
+        },
+        {
+          name: "payer";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
         }
       ];
       args: [];
@@ -2637,7 +2647,7 @@ export const IDL: CardinalStakePool = {
       args: [],
     },
     {
-      name: "closeGroupEntry",
+      name: "initUngrouping",
       accounts: [
         {
           name: "groupEntry",
@@ -2648,6 +2658,16 @@ export const IDL: CardinalStakePool = {
           name: "authority",
           isMut: true,
           isSigner: true,
+        },
+        {
+          name: "payer",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
         },
       ],
       args: [],
