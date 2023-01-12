@@ -1,6 +1,6 @@
 [package]
 name = "cardinal-group-reward-distributor"
-version = "1.14.0"
+version = "1.16.3"
 description = "Cardinal group reward distributor"
 edition = "2021"
 homepage = "https://cardinal.so"
