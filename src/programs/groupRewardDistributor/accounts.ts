@@ -118,7 +118,7 @@ export const getGroupRewardEntriesForGroupRewardDistributor = async (
         },
         {
           memcmp: {
-            offset: 8 + 32,
+            offset: 8 + 1 + 32,
             bytes: groupRewardDistributorId.toBase58(),
           },
         },

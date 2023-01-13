@@ -42,18 +42,34 @@ export enum GroupRewardDistributorKind {
   Mint = 1,
   Treasury = 2,
 }
+export const toGroupRewardDistributorKind = (value: { [key: string]: any }) =>
+  Object.values(GroupRewardDistributorKind).findIndex(
+    (x) => (x as string).toLowerCase() === Object.keys(value)[0]?.toLowerCase()
+  ) + 1;
 
 export enum GroupRewardDistributorMetadataKind {
   NoRestriction = 1,
   UniqueNames = 2,
   UniqueSymbols = 3,
 }
+export const toGroupRewardDistributorMetadataKind = (value: {
+  [key: string]: any;
+}) =>
+  Object.values(GroupRewardDistributorMetadataKind).findIndex(
+    (x) => (x as string).toLowerCase() === Object.keys(value)[0]?.toLowerCase()
+  ) + 1;
 
 export enum GroupRewardDistributorPoolKind {
   NoRestriction = 1,
   AllFromSinglePool = 2,
   EachFromSeparatePool = 3,
 }
+export const toGroupRewardDistributorPoolKind = (value: {
+  [key: string]: any;
+}) =>
+  Object.values(GroupRewardDistributorPoolKind).findIndex(
+    (x) => (x as string).toLowerCase() === Object.keys(value)[0]?.toLowerCase()
+  ) + 1;
 
 export const groupRewardDistributorProgram = (
   connection: Connection,

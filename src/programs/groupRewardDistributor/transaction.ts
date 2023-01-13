@@ -15,6 +15,7 @@ import {
   GroupRewardDistributorKind,
   GroupRewardDistributorMetadataKind,
   GroupRewardDistributorPoolKind,
+  toGroupRewardDistributorKind,
 } from "./constants";
 import {
   claimGroupRewards,
@@ -187,8 +188,9 @@ export const withClaimGroupRewards = async (
       connection,
       wallet,
       groupRewardDistributorData.pubkey,
-      groupRewardDistributorData.parsed
-        .rewardKind as GroupRewardDistributorKind,
+      toGroupRewardDistributorKind(
+        groupRewardDistributorData.parsed.rewardKind
+      ),
       groupRewardDistributorData.parsed.rewardMint,
       true
     );
@@ -235,8 +237,9 @@ export const withCloseGroupRewardDistributor = async (
       connection,
       wallet,
       groupRewardDistributorData.pubkey,
-      groupRewardDistributorData.parsed
-        .rewardKind as GroupRewardDistributorKind,
+      toGroupRewardDistributorKind(
+        groupRewardDistributorData.parsed.rewardKind
+      ),
       groupRewardDistributorData.parsed.rewardMint
     );
 
