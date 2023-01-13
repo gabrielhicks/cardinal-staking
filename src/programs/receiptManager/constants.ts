@@ -1,8 +1,5 @@
-import {
-  AnchorProvider,
-  Program,
-  Wallet as AWallet,
-} from "@project-serum/anchor";
+import { emptyWallet } from "@cardinal/common";
+import { AnchorProvider, Program } from "@project-serum/anchor";
 import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import type { ConfirmOptions, Connection } from "@solana/web3.js";
 import { Keypair, PublicKey } from "@solana/web3.js";
@@ -51,7 +48,7 @@ export const receiptManagerProgram = (
     RECEIPT_MANAGER_ADDRESS,
     new AnchorProvider(
       connection,
-      wallet ?? new AWallet(Keypair.generate()),
+      wallet ?? emptyWallet(Keypair.generate().publicKey),
       confirmOptions ?? {}
     )
   );
