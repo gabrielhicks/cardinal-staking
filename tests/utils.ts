@@ -183,7 +183,7 @@ export async function executeTransaction(
 ): Promise<string> {
   tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   tx.feePayer = wallet.publicKey;
-  await wallet.signTransaction(tx);
+  tx = await wallet.signTransaction(tx);
   if (config?.signers) {
     tx.partialSign(...(config?.signers ?? []));
   }

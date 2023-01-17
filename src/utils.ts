@@ -46,7 +46,7 @@ export const executeTransaction = async (
     transaction.recentBlockhash = (
       await connection.getRecentBlockhash("max")
     ).blockhash;
-    await wallet.signTransaction(transaction);
+    transaction = await wallet.signTransaction(transaction);
     if (config.signers && config.signers.length > 0) {
       transaction.partialSign(...config.signers);
     }

@@ -1,3 +1,5 @@
+import { tryGetAccount } from "@cardinal/common";
+import { fetchIdlAccountNullable } from "@cardinal/rewards-center";
 import { utils } from "@project-serum/anchor";
 import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import type {
@@ -13,7 +15,30 @@ import {
 } from "@solana/web3.js";
 import * as dotenv from "dotenv";
 
+import { getStakePool } from "../src/programs/stakePool/accounts";
+
 dotenv.config();
+
+export type StakePoolKind = "v1" | "v2" | "unknown";
+
+export const stakePoolKind = async (
+  connection: Connection,
+  stakePoolAddress: PublicKey
+): Promise<StakePoolKind> => {
+  const checkStakePooolV1 = await tryGetAccount(() =>
+    getStakePool(connection, stakePoolAddress)
+  );
+  if (checkStakePooolV1) return "v1";
+
+  const checkStakePoolV2 = await fetchIdlAccountNullable(
+    connection,
+    stakePoolAddress,
+    "stakePool"
+  );
+  if (checkStakePoolV2) return "v2";
+
+  return "unknown";
+};
 
 export function chunkArray<T>(arr: T[], size: number): T[][] {
   return arr.length > size
