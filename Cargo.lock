@@ -425,7 +425,7 @@ dependencies = [
 
 [[package]]
 name = "cardinal-group-reward-distributor"
-version = "1.16.4"
+version = "1.17.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -453,7 +453,7 @@ dependencies = [
 
 [[package]]
 name = "cardinal-receipt-manager"
-version = "1.16.4"
+version = "1.17.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -466,7 +466,7 @@ dependencies = [
 
 [[package]]
 name = "cardinal-reward-distributor"
-version = "1.16.4"
+version = "1.17.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -478,7 +478,7 @@ dependencies = [
 
 [[package]]
 name = "cardinal-stake-pool"
-version = "1.16.4"
+version = "1.17.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

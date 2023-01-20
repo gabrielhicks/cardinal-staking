@@ -1,5 +1,5 @@
 export type CardinalStakePool = {
-  version: "1.16.4";
+  version: "1.17.0";
   name: "cardinal_stake_pool";
   instructions: [
     {
@@ -1720,7 +1720,7 @@ export type CardinalStakePool = {
 };
 
 export const IDL: CardinalStakePool = {
-  version: "1.16.4",
+  version: "1.17.0",
   name: "cardinal_stake_pool",
   instructions: [
     {
