@@ -170,8 +170,8 @@ describe("Group stake ungroup", () => {
     }
   });
 
-  it("Wait for 1 seconds", async () => {
-    await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+  it("Wait for 2 seconds", async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(true), 2000));
   });
 
   it("Start cooldown period", async () => {

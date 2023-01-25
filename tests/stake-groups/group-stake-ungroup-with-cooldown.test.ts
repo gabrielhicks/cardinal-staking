@@ -188,8 +188,8 @@ describe("Group stake ungroup", () => {
     expect(groupStakeEntryData.parsed.groupCooldownStartSeconds).not.toBeNull();
   });
 
-  it("Wait for 1 seconds", async () => {
-    await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+  it("Wait for 2 seconds", async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(true), 2000));
   });
 
   it("Remove 1 from group", async () => {
