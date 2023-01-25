@@ -310,20 +310,24 @@ export const calculatePendingGroupRewards = (
     .sub(rewardSecondsReceived)
     .div(groupRewardDistributor.parsed.rewardDurationSeconds)
     .mul(groupRewardDistributor.parsed.rewardAmount)
-    .mul(multiplier)
+    .mul(
+      multiplier
+        .mul(groupRewardDistributor.parsed.baseMultiplier)
+        .div(
+          new BN(10).pow(
+            new BN(groupRewardDistributor.parsed.baseMultiplierDecimals)
+          )
+        )
+        .add(
+          groupRewardDistributor.parsed.baseAdder.div(
+            new BN(10).pow(
+              new BN(groupRewardDistributor.parsed.baseAdderDecimals)
+            )
+          )
+        )
+    )
     .div(
       new BN(10).pow(new BN(groupRewardDistributor.parsed.multiplierDecimals))
-    )
-    .mul(groupRewardDistributor.parsed.baseMultiplier)
-    .div(
-      new BN(10).pow(
-        new BN(groupRewardDistributor.parsed.baseMultiplierDecimals)
-      )
-    )
-    .add(
-      groupRewardDistributor.parsed.baseAdder.div(
-        new BN(10).pow(new BN(groupRewardDistributor.parsed.baseAdderDecimals))
-      )
     );
 
   if (

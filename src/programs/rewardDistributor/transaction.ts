@@ -252,7 +252,6 @@ export const withUpdateRewardEntry = async (
       authority: wallet.publicKey,
     })
     .instruction();
-  transaction.add(ix);
   return transaction.add(ix);
 };
 
