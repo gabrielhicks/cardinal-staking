@@ -77,7 +77,7 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
                     .unwrap()
                     .checked_add(
                         (group_reward_distributor.base_adder as u128)
-                            .checked_div((10_u128).checked_pow(group_reward_distributor.base_multiplier_decimals as u32).unwrap())
+                            .checked_div((10_u128).checked_pow(group_reward_distributor.base_adder_decimals as u32).unwrap())
                             .unwrap(),
                     )
                     .unwrap(),
@@ -165,7 +165,7 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
                         .unwrap()
                         .checked_add(
                             (group_reward_distributor.base_adder as u128)
-                                .checked_div((10_u128).checked_pow(group_reward_distributor.base_multiplier_decimals as u32).unwrap())
+                                .checked_div((10_u128).checked_pow(group_reward_distributor.base_adder_decimals as u32).unwrap())
                                 .unwrap(),
                         )
                         .unwrap(),

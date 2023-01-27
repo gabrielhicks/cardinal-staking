@@ -1,6 +1,6 @@
 import type { AccountData } from "@cardinal/common";
 import { BorshAccountsCoder, utils } from "@project-serum/anchor";
-import type { Connection, PublicKey } from "@solana/web3.js";
+import type { Commitment, Connection, PublicKey } from "@solana/web3.js";
 
 import { REWARD_DISTRIBUTOR_ADDRESS, REWARD_DISTRIBUTOR_IDL } from ".";
 import type { RewardDistributorData, RewardEntryData } from "./constants";
@@ -8,9 +8,12 @@ import { rewardDistributorProgram } from "./constants";
 
 export const getRewardEntry = async (
   connection: Connection,
-  rewardEntryId: PublicKey
+  rewardEntryId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<RewardEntryData>> => {
-  const program = rewardDistributorProgram(connection);
+  const program = rewardDistributorProgram(connection, undefined, {
+    commitment,
+  });
   const parsed = (await program.account.rewardEntry.fetch(
     rewardEntryId
   )) as RewardEntryData;
@@ -22,9 +25,12 @@ export const getRewardEntry = async (
 
 export const getRewardEntries = async (
   connection: Connection,
-  rewardEntryIds: PublicKey[]
+  rewardEntryIds: PublicKey[],
+  commitment?: Commitment
 ): Promise<AccountData<RewardEntryData>[]> => {
-  const program = rewardDistributorProgram(connection);
+  const program = rewardDistributorProgram(connection, undefined, {
+    commitment,
+  });
   const rewardEntries = (await program.account.rewardEntry.fetchMultiple(
     rewardEntryIds
   )) as RewardEntryData[];
@@ -36,9 +42,12 @@ export const getRewardEntries = async (
 
 export const getRewardDistributor = async (
   connection: Connection,
-  rewardDistributorId: PublicKey
+  rewardDistributorId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<RewardDistributorData>> => {
-  const program = rewardDistributorProgram(connection);
+  const program = rewardDistributorProgram(connection, undefined, {
+    commitment,
+  });
   const parsed = (await program.account.rewardDistributor.fetch(
     rewardDistributorId
   )) as RewardDistributorData;
@@ -50,9 +59,12 @@ export const getRewardDistributor = async (
 
 export const getRewardDistributors = async (
   connection: Connection,
-  rewardDistributorIds: PublicKey[]
+  rewardDistributorIds: PublicKey[],
+  commitment?: Commitment
 ): Promise<AccountData<RewardDistributorData>[]> => {
-  const program = rewardDistributorProgram(connection);
+  const program = rewardDistributorProgram(connection, undefined, {
+    commitment,
+  });
   const rewardDistributors =
     (await program.account.rewardDistributor.fetchMultiple(
       rewardDistributorIds
@@ -65,7 +77,8 @@ export const getRewardDistributors = async (
 
 export const getRewardEntriesForRewardDistributor = async (
   connection: Connection,
-  rewardDistributorId: PublicKey
+  rewardDistributorId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<RewardEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     REWARD_DISTRIBUTOR_ADDRESS,
@@ -86,6 +99,7 @@ export const getRewardEntriesForRewardDistributor = async (
           },
         },
       ],
+      commitment,
     }
   );
   const rewardEntryDatas: AccountData<RewardEntryData>[] = [];
@@ -111,7 +125,8 @@ export const getRewardEntriesForRewardDistributor = async (
 };
 
 export const getAllRewardEntries = async (
-  connection: Connection
+  connection: Connection,
+  commitment?: Commitment
 ): Promise<AccountData<RewardEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     REWARD_DISTRIBUTOR_ADDRESS,
@@ -126,6 +141,7 @@ export const getAllRewardEntries = async (
           },
         },
       ],
+      commitment,
     }
   );
   const rewardEntryDatas: AccountData<RewardEntryData>[] = [];

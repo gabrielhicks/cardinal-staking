@@ -1,6 +1,6 @@
 import type { AccountData } from "@cardinal/common";
 import { BorshAccountsCoder, utils } from "@project-serum/anchor";
-import type { Connection } from "@solana/web3.js";
+import type { Commitment, Connection } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 
 import type { StakePoolData } from ".";
@@ -23,9 +23,10 @@ import { findIdentifierId } from "./pda";
 
 export const getStakePool = async (
   connection: Connection,
-  stakePoolId: PublicKey
+  stakePoolId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakePoolData>> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const parsed = await program.account.stakePool.fetch(stakePoolId);
   return {
     parsed,
@@ -35,9 +36,10 @@ export const getStakePool = async (
 
 export const getStakePools = async (
   connection: Connection,
-  stakePoolIds: PublicKey[]
+  stakePoolIds: PublicKey[],
+  commitment?: Commitment
 ): Promise<AccountData<StakePoolData>[]> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const stakePools = (await program.account.stakePool.fetchMultiple(
     stakePoolIds
   )) as StakePoolData[];
@@ -48,7 +50,8 @@ export const getStakePools = async (
 };
 
 export const getAllStakePools = async (
-  connection: Connection
+  connection: Connection,
+  commitment?: Commitment
 ): Promise<AccountData<StakePoolData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -63,6 +66,7 @@ export const getAllStakePools = async (
           },
         },
       ],
+      commitment,
     }
   );
   const stakePoolDatas: AccountData<StakePoolData>[] = [];
@@ -89,12 +93,14 @@ export const getAllStakePools = async (
 
 export const getStakeEntriesForUser = async (
   connection: Connection,
-  user: PublicKey
+  user: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
     {
       filters: [{ memcmp: { offset: STAKER_OFFSET, bytes: user.toBase58() } }],
+      commitment,
     }
   );
 
@@ -123,7 +129,8 @@ export const getStakeEntriesForUser = async (
 };
 
 export const getAllActiveStakeEntries = async (
-  connection: Connection
+  connection: Connection,
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -138,6 +145,7 @@ export const getAllActiveStakeEntries = async (
           },
         },
       ],
+      commitment,
     }
   );
   const stakeEntryDatas: AccountData<StakeEntryData>[] = [];
@@ -169,7 +177,8 @@ export const getAllActiveStakeEntries = async (
 
 export const getAllStakeEntriesForPool = async (
   connection: Connection,
-  stakePoolId: PublicKey
+  stakePoolId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -187,6 +196,7 @@ export const getAllStakeEntriesForPool = async (
           memcmp: { offset: POOL_OFFSET, bytes: stakePoolId.toBase58() },
         },
       ],
+      commitment,
     }
   );
   const stakeEntryDatas: AccountData<StakeEntryData>[] = [];
@@ -213,7 +223,8 @@ export const getAllStakeEntriesForPool = async (
 
 export const getActiveStakeEntriesForPool = async (
   connection: Connection,
-  stakePoolId: PublicKey
+  stakePoolId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -223,6 +234,7 @@ export const getActiveStakeEntriesForPool = async (
           memcmp: { offset: POOL_OFFSET, bytes: stakePoolId.toBase58() },
         },
       ],
+      commitment,
     }
   );
   const stakeEntryDatas: AccountData<StakeEntryData>[] = [];
@@ -254,9 +266,10 @@ export const getActiveStakeEntriesForPool = async (
 
 export const getStakeEntry = async (
   connection: Connection,
-  stakeEntryId: PublicKey
+  stakeEntryId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const parsed = await program.account.stakeEntry.fetch(stakeEntryId);
   return {
     parsed,
@@ -266,9 +279,10 @@ export const getStakeEntry = async (
 
 export const getStakeEntries = async (
   connection: Connection,
-  stakeEntryIds: PublicKey[]
+  stakeEntryIds: PublicKey[],
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>[]> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const stakeEntries = (await program.account.stakeEntry.fetchMultiple(
     stakeEntryIds
   )) as StakeEntryData[];
@@ -279,9 +293,10 @@ export const getStakeEntries = async (
 };
 
 export const getPoolIdentifier = async (
-  connection: Connection
+  connection: Connection,
+  commitment?: Commitment
 ): Promise<AccountData<IdentifierData>> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const identifierId = findIdentifierId();
   const parsed = await program.account.identifier.fetch(identifierId);
   return {
@@ -292,9 +307,10 @@ export const getPoolIdentifier = async (
 
 export const getStakeAuthorization = async (
   connection: Connection,
-  stakeAuthorizationId: PublicKey
+  stakeAuthorizationId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeAuthorizationData>> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const parsed = await program.account.stakeAuthorizationRecord.fetch(
     stakeAuthorizationId
   );
@@ -306,9 +322,10 @@ export const getStakeAuthorization = async (
 
 export const getStakeAuthorizations = async (
   connection: Connection,
-  stakeAuthorizationIds: PublicKey[]
+  stakeAuthorizationIds: PublicKey[],
+  commitment?: Commitment
 ): Promise<AccountData<StakeAuthorizationData>[]> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const stakeAuthorizations =
     (await program.account.stakeAuthorizationRecord.fetchMultiple(
       stakeAuthorizationIds
@@ -322,7 +339,8 @@ export const getStakeAuthorizations = async (
 
 export const getStakeAuthorizationsForPool = async (
   connection: Connection,
-  poolId: PublicKey
+  poolId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeAuthorizationData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -342,6 +360,7 @@ export const getStakeAuthorizationsForPool = async (
           memcmp: { offset: POOL_OFFSET, bytes: poolId.toBase58() },
         },
       ],
+      commitment,
     }
   );
 
@@ -368,7 +387,8 @@ export const getStakeAuthorizationsForPool = async (
 
 export const getStakePoolsByAuthority = async (
   connection: Connection,
-  user: PublicKey
+  user: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakePoolData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -389,6 +409,7 @@ export const getStakePoolsByAuthority = async (
           },
         },
       ],
+      commitment,
     }
   );
   const stakePoolDatas: AccountData<StakePoolData>[] = [];
@@ -414,7 +435,8 @@ export const getStakePoolsByAuthority = async (
 };
 
 export const getAllStakeEntries = async (
-  connection: Connection
+  connection: Connection,
+  commitment?: Commitment
 ): Promise<AccountData<StakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -429,6 +451,7 @@ export const getAllStakeEntries = async (
           },
         },
       ],
+      commitment,
     }
   );
   const stakeEntryDatas: AccountData<StakeEntryData>[] = [];
@@ -455,9 +478,10 @@ export const getAllStakeEntries = async (
 
 export const getStakeBooster = async (
   connection: Connection,
-  stakeBoosterId: PublicKey
+  stakeBoosterId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<StakeBoosterData>> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const parsed = await program.account.stakeBooster.fetch(stakeBoosterId);
   return {
     parsed,
@@ -467,7 +491,8 @@ export const getStakeBooster = async (
 
 export const getGroupStakeEntriesForUser = async (
   connection: Connection,
-  user: PublicKey
+  user: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<GroupStakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -483,6 +508,7 @@ export const getGroupStakeEntriesForUser = async (
         },
         { memcmp: { offset: GROUP_STAKER_OFFSET, bytes: user.toBase58() } },
       ],
+      commitment,
     }
   );
 
@@ -511,7 +537,8 @@ export const getGroupStakeEntriesForUser = async (
 };
 
 export const getAllGroupStakeEntries = async (
-  connection: Connection
+  connection: Connection,
+  commitment?: Commitment
 ): Promise<AccountData<GroupStakeEntryData>[]> => {
   const programAccounts = await connection.getProgramAccounts(
     STAKE_POOL_ADDRESS,
@@ -526,6 +553,7 @@ export const getAllGroupStakeEntries = async (
           },
         },
       ],
+      commitment,
     }
   );
   const groupStakeEntryDatas: AccountData<GroupStakeEntryData>[] = [];
@@ -554,9 +582,10 @@ export const getAllGroupStakeEntries = async (
 
 export const getGroupStakeEntry = async (
   connection: Connection,
-  groupStakeEntryId: PublicKey
+  groupStakeEntryId: PublicKey,
+  commitment?: Commitment
 ): Promise<AccountData<GroupStakeEntryData>> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const parsed = await program.account.groupStakeEntry.fetch(groupStakeEntryId);
   return {
     parsed,
@@ -566,9 +595,10 @@ export const getGroupStakeEntry = async (
 
 export const getGroupStakeEntries = async (
   connection: Connection,
-  groupStakeEntryIds: PublicKey[]
+  groupStakeEntryIds: PublicKey[],
+  commitment?: Commitment
 ): Promise<AccountData<GroupStakeEntryData>[]> => {
-  const program = stakePoolProgram(connection);
+  const program = stakePoolProgram(connection, undefined, { commitment });
   const groupStakeEntries =
     (await program.account.groupStakeEntry.fetchMultiple(
       groupStakeEntryIds
