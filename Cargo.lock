@@ -425,7 +425,7 @@ dependencies = [
 
 [[package]]
 name = "cardinal-group-reward-distributor"
-version = "1.17.3"
+version = "1.17.4"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
