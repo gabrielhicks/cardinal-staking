@@ -264,6 +264,39 @@ export const getActiveStakeEntriesForPool = async (
   );
 };
 
+export const getActiveStakeEntryIdsForPool = async (
+  connection: Connection,
+  stakePoolId: PublicKey,
+  commitment?: Commitment
+): Promise<PublicKey[]> => {
+  const programAccounts = await connection.getProgramAccounts(
+    STAKE_POOL_ADDRESS,
+    {
+      filters: [
+        {
+          memcmp: { offset: POOL_OFFSET, bytes: stakePoolId.toBase58() },
+        },
+      ],
+      commitment,
+      dataSlice: {
+        length: 32,
+        offset: STAKER_OFFSET,
+      },
+    }
+  );
+  return programAccounts
+    .filter((x) => {
+      try {
+        const lastStaker = new PublicKey(x.account.data);
+        return !lastStaker.equals(PublicKey.default);
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    })
+    .map((x) => x.pubkey);
+};
+
 export const getStakeEntry = async (
   connection: Connection,
   stakeEntryId: PublicKey,
