@@ -234,6 +234,11 @@ export type CardinalGroupRewardDistributor = {
           name: "authority";
           isMut: false;
           isSigner: true;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
         }
       ];
       args: [
@@ -496,6 +501,14 @@ export type CardinalGroupRewardDistributor = {
             type: {
               option: "u128";
             };
+          },
+          {
+            name: "authorizedCreators";
+            type: {
+              option: {
+                vec: "publicKey";
+              };
+            };
           }
         ];
       };
@@ -535,6 +548,14 @@ export type CardinalGroupRewardDistributor = {
             name: "authorizedPools";
             type: {
               vec: "publicKey";
+            };
+          },
+          {
+            name: "authorizedCreators";
+            type: {
+              option: {
+                vec: "publicKey";
+              };
             };
           },
           {
@@ -643,6 +664,14 @@ export type CardinalGroupRewardDistributor = {
             name: "authorizedPools";
             type: {
               vec: "publicKey";
+            };
+          },
+          {
+            name: "authorizedCreators";
+            type: {
+              option: {
+                vec: "publicKey";
+              };
             };
           },
           {
@@ -1107,6 +1136,11 @@ export const IDL: CardinalGroupRewardDistributor = {
           isMut: false,
           isSigner: true,
         },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
       ],
       args: [
         {
@@ -1369,6 +1403,14 @@ export const IDL: CardinalGroupRewardDistributor = {
               option: "u128",
             },
           },
+          {
+            name: "authorizedCreators",
+            type: {
+              option: {
+                vec: "publicKey",
+              },
+            },
+          },
         ],
       },
     },
@@ -1407,6 +1449,14 @@ export const IDL: CardinalGroupRewardDistributor = {
             name: "authorizedPools",
             type: {
               vec: "publicKey",
+            },
+          },
+          {
+            name: "authorizedCreators",
+            type: {
+              option: {
+                vec: "publicKey",
+              },
             },
           },
           {
@@ -1515,6 +1565,14 @@ export const IDL: CardinalGroupRewardDistributor = {
             name: "authorizedPools",
             type: {
               vec: "publicKey",
+            },
+          },
+          {
+            name: "authorizedCreators",
+            type: {
+              option: {
+                vec: "publicKey",
+              },
             },
           },
           {

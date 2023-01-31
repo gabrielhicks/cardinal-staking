@@ -39,6 +39,7 @@ export const withInitGroupRewardDistributor = async (
   params: {
     rewardMintId: PublicKey;
     authorizedPools: PublicKey[];
+    authorizedCreators?: PublicKey[];
     rewardAmount?: BN;
     rewardDurationSeconds?: BN;
     rewardKind?: GroupRewardDistributorKind;
@@ -70,6 +71,7 @@ export const withInitGroupRewardDistributor = async (
         params.metadataKind || GroupRewardDistributorMetadataKind.NoRestriction,
       poolKind: params.poolKind || GroupRewardDistributorPoolKind.NoRestriction,
       authorizedPools: params.authorizedPools,
+      authorizedCreators: params.authorizedCreators,
       supply: params.supply,
       baseAdder: params.baseAdder,
       baseAdderDecimals: params.baseAdderDecimals,
@@ -307,6 +309,7 @@ export const withUpdateGroupRewardDistributor = async (
   params: {
     groupRewardDistributorId: PublicKey;
     authorizedPools: PublicKey[];
+    authorizedCreators?: PublicKey[];
     rewardAmount?: BN;
     rewardDurationSeconds?: BN;
     poolKind?: GroupRewardDistributorPoolKind;
@@ -334,6 +337,7 @@ export const withUpdateGroupRewardDistributor = async (
         params.metadataKind || GroupRewardDistributorMetadataKind.NoRestriction,
       poolKind: params.poolKind || GroupRewardDistributorPoolKind.NoRestriction,
       authorizedPools: params.authorizedPools,
+      authorizedCreators: params.authorizedCreators,
       baseAdder: params.baseAdder,
       baseAdderDecimals: params.baseAdderDecimals,
       baseMultiplier: params.baseMultiplier,

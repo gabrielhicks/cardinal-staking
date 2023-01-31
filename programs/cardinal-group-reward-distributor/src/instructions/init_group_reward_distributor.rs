@@ -1,5 +1,5 @@
 use {
-    crate::{errors::ErrorCode, state::*},
+    crate::{errors::ErrorCode, state::*, utils::*},
     anchor_lang::prelude::*,
     anchor_spl::token::{self, Mint, SetAuthority, Token, TokenAccount},
     spl_token::instruction::AuthorityType,
@@ -14,6 +14,7 @@ pub struct InitGroupRewardDistributorIx {
     pub metadata_kind: u8,
     pub pool_kind: u8,
     pub authorized_pools: Vec<Pubkey>,
+    pub authorized_creators: Option<Vec<Pubkey>>,
     pub supply: Option<u64>,
     pub base_adder: Option<u64>,
     pub base_adder_decimals: Option<u8>,
@@ -63,6 +64,7 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
     group_reward_distributor.metadata_kind = GroupRewardDistributorMetadataKind::from(ix.metadata_kind);
     group_reward_distributor.pool_kind = GroupRewardDistributorPoolKind::from(ix.pool_kind);
     group_reward_distributor.authorized_pools = ix.authorized_pools;
+    group_reward_distributor.authorized_creators = ix.authorized_creators;
     group_reward_distributor.authority = ctx.accounts.authority.key();
     group_reward_distributor.reward_mint = ctx.accounts.reward_mint.key();
     group_reward_distributor.reward_amount = ix.reward_amount;
@@ -119,5 +121,14 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
         }
         _ => return Err(error!(ErrorCode::InvalidRewardDistributorKind)),
     }
+
+    let new_space = group_reward_distributor.try_to_vec()?.len() + 8;
+    resize_account(
+        &group_reward_distributor.to_account_info(),
+        new_space,
+        &ctx.accounts.authority.to_account_info(),
+        &ctx.accounts.system_program.to_account_info(),
+    )?;
+
     Ok(())
 }

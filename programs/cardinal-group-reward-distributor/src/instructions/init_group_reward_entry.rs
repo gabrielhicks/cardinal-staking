@@ -98,6 +98,18 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
             return Err(error!(ErrorCode::InvalidMintMetadata));
         }
 
+        let authorized_creators = group_reward_distributor.authorized_creators.as_ref();
+        if authorized_creators.is_some() {
+            if original_mint_metadata.data.creators.is_none() {
+                return Err(error!(ErrorCode::InvalidOriginalMint));
+            }
+            let creators = original_mint_metadata.data.creators.unwrap();
+            let find = creators.iter().find(|c| authorized_creators.unwrap().contains(&c.address) && c.verified);
+            if find.is_none() {
+                return Err(error!(ErrorCode::InvalidOriginalMint));
+            };
+        }
+
         let reward_entry_info = next_account_info(remaining_accounts)?;
         if reward_entry_info.data_is_empty() {
             return Err(error!(ErrorCode::InvalidRewardEntry));

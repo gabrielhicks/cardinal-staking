@@ -84,32 +84,7 @@ pub struct GroupRewardEntry {
 }
 
 pub const GROUP_REWARD_DISTRIBUTOR_SEED: &str = "group-reward-distributor";
-pub const GROUP_REWARD_DISTRIBUTOR_SIZE: usize = 8 // Anchor discriminator/sighash
- + 1 // bump
- + 32 // id
- + 4 + 5 * 32// authorized_pools (5 Pubkeys)
- + 1 // reward_kind
- + 1 // metadata_kind
- + 1 // pool_kind
- + 32 // authority
- + 32 // reward_mint
- + 8 // reward_amount
- + 16 // reward_duration_seconds
- + 16 // rewards_issued
- + 8 // base_adder
- + 1 // base_adder_decimals
- + 8 // base_multiplier
- + 1 // base_multiplier_decimals
- + 1 // multiplier_decimals
- + 4 // min_cooldown_seconds
- + 4 // min_stake_seconds
- + 8 // max_supply
- + 8 // group_count_multiplier
- + 1 // group_count_multiplier_decimals
- + 1 // min_group_size
- + 16 // max_reward_seconds_received
- + 256 // padding
-;
+pub const GROUP_REWARD_DISTRIBUTOR_SIZE: usize = std::mem::size_of::<GroupRewardDistributor>() + 64;
 #[account]
 pub struct GroupRewardDistributor {
     pub bump: u8,
@@ -135,4 +110,5 @@ pub struct GroupRewardDistributor {
     pub group_count_multiplier_decimals: Option<u8>,
     pub min_group_size: Option<u8>,
     pub max_reward_seconds_received: Option<u128>,
+    pub authorized_creators: Option<Vec<Pubkey>>,
 }

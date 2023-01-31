@@ -1,4 +1,7 @@
-use {crate::state::*, anchor_lang::prelude::*};
+use {
+    crate::{state::*, utils::*},
+    anchor_lang::prelude::*,
+};
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct UpdateGroupRewardDistributorIx {
@@ -7,6 +10,7 @@ pub struct UpdateGroupRewardDistributorIx {
     pub metadata_kind: u8,
     pub pool_kind: u8,
     pub authorized_pools: Vec<Pubkey>,
+    pub authorized_creators: Option<Vec<Pubkey>>,
     pub base_adder: Option<u64>,
     pub base_adder_decimals: Option<u8>,
     pub base_multiplier: Option<u64>,
@@ -28,6 +32,8 @@ pub struct UpdateGroupRewardDistributorCtx<'info> {
     group_reward_distributor: Box<Account<'info, GroupRewardDistributor>>,
 
     authority: Signer<'info>,
+
+    system_program: Program<'info, System>,
 }
 
 pub fn handler(ctx: Context<UpdateGroupRewardDistributorCtx>, ix: UpdateGroupRewardDistributorIx) -> Result<()> {
@@ -35,6 +41,7 @@ pub fn handler(ctx: Context<UpdateGroupRewardDistributorCtx>, ix: UpdateGroupRew
     group_reward_distributor.metadata_kind = GroupRewardDistributorMetadataKind::from(ix.metadata_kind);
     group_reward_distributor.pool_kind = GroupRewardDistributorPoolKind::from(ix.pool_kind);
     group_reward_distributor.authorized_pools = ix.authorized_pools;
+    group_reward_distributor.authorized_creators = ix.authorized_creators;
     group_reward_distributor.reward_amount = ix.reward_amount;
     group_reward_distributor.reward_duration_seconds = ix.reward_duration_seconds as u128;
     group_reward_distributor.max_supply = ix.max_supply;
@@ -49,6 +56,14 @@ pub fn handler(ctx: Context<UpdateGroupRewardDistributorCtx>, ix: UpdateGroupRew
     group_reward_distributor.group_count_multiplier_decimals = ix.group_count_multiplier_decimals;
     group_reward_distributor.min_group_size = ix.min_group_size;
     group_reward_distributor.max_reward_seconds_received = ix.max_reward_seconds_received;
+
+    let new_space = group_reward_distributor.try_to_vec()?.len() + 8;
+    resize_account(
+        &group_reward_distributor.to_account_info(),
+        new_space,
+        &ctx.accounts.authority.to_account_info(),
+        &ctx.accounts.system_program.to_account_info(),
+    )?;
 
     Ok(())
 }

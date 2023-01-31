@@ -234,6 +234,11 @@
           "name": "authority",
           "isMut": false,
           "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
@@ -496,6 +501,14 @@
             "type": {
               "option": "u128"
             }
+          },
+          {
+            "name": "authorizedCreators",
+            "type": {
+              "option": {
+                "vec": "publicKey"
+              }
+            }
           }
         ]
       }
@@ -535,6 +548,14 @@
             "name": "authorizedPools",
             "type": {
               "vec": "publicKey"
+            }
+          },
+          {
+            "name": "authorizedCreators",
+            "type": {
+              "option": {
+                "vec": "publicKey"
+              }
             }
           },
           {
@@ -643,6 +664,14 @@
             "name": "authorizedPools",
             "type": {
               "vec": "publicKey"
+            }
+          },
+          {
+            "name": "authorizedCreators",
+            "type": {
+              "option": {
+                "vec": "publicKey"
+              }
             }
           },
           {
