@@ -302,7 +302,9 @@ export const calculatePendingGroupRewards = (
     groupRewardEntry?.parsed.rewardSecondsReceived || new BN(0);
   const multiplier = groupRewardEntry?.parsed?.multiplier || new BN(1);
 
-  let groupRewardSeconds = new BN(UTCNow).sub(groupEntry.parsed.changedAt);
+  let groupRewardSeconds = (
+    groupEntry.parsed.groupCooldownStartSeconds || new BN(UTCNow)
+  ).sub(groupEntry.parsed.changedAt);
   if (groupRewardDistributor.parsed.maxRewardSecondsReceived) {
     groupRewardSeconds = BN.min(
       groupRewardSeconds,
