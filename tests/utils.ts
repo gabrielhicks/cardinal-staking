@@ -225,21 +225,26 @@ export const handleError = (e: any) => {
 
 export const createProgrammableAsset = async (
   connection: Connection,
-  wallet: Wallet
-): Promise<[PublicKey, PublicKey, PublicKey]> => {
+  wallet: Wallet,
+  uri = "uri"
+): Promise<[PublicKey, PublicKey, PublicKey, string]> => {
   const mintKeypair = Keypair.generate();
   const mintId = mintKeypair.publicKey;
   const [tx, ata, rulesetId] = createProgrammableAssetTx(
     mintKeypair.publicKey,
-    wallet.publicKey
+    wallet.publicKey,
+    uri
   );
-  await executeTransaction(connection, tx, wallet, { signers: [mintKeypair] });
-  return [ata, mintId, rulesetId];
+  const txid = await executeTransaction(connection, tx, wallet, {
+    signers: [mintKeypair],
+  });
+  return [ata, mintId, rulesetId, txid];
 };
 
 export const createProgrammableAssetTx = (
   mintId: PublicKey,
-  authority: PublicKey
+  authority: PublicKey,
+  uri = "uri"
 ): [Transaction, PublicKey, PublicKey] => {
   const metadataId = findMintMetadataId(mintId);
   const masterEditionId = findMintEditionId(mintId);
@@ -289,7 +294,7 @@ export const createProgrammableAssetTx = (
         assetData: {
           name: `NFT - ${Math.floor(Date.now() / 1000)}`,
           symbol: "PNF",
-          uri: "uri",
+          uri: uri,
           sellerFeeBasisPoints: 0,
           creators: [
             {

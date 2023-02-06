@@ -506,14 +506,15 @@ export const claimRewardsAll = async (
   return !rewardTokenAccount
     ? [
         txs.slice(0, 1).map((tx) => {
-          tx.add(
+          tx.instructions = [
             createAssociatedTokenAccountIdempotentInstruction(
               wallet.publicKey,
               userRewardTokenAccountId,
               wallet.publicKey,
               rewardMintId
-            )
-          );
+            ),
+            ...tx.instructions,
+          ];
           return { tx };
         }),
         txs.slice(1).map((tx) => ({ tx })),
@@ -1145,19 +1146,20 @@ export const unstakeAll = async (
   return !rewardTokenAccount && userRewardTokenAccountId && rewardMintId
     ? [
         txs.slice(0, 1).map(({ tx }) => {
-          tx.add(
+          tx.instructions = [
             createAssociatedTokenAccountIdempotentInstruction(
               wallet.publicKey,
               userRewardTokenAccountId,
               wallet.publicKey,
               rewardMintId
-            )
-          );
+            ),
+            ...tx.instructions,
+          ];
           return { tx };
         }),
-        txs.slice(1).map(({ tx }) => ({ tx })),
+        txs.slice(1),
       ]
-    : [txs.map(({ tx }) => ({ tx }))];
+    : [txs];
 };
 
 /**
