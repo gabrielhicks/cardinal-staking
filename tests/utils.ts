@@ -1,4 +1,9 @@
-import { findMintEditionId, findMintMetadataId } from "@cardinal/common";
+import {
+  findMintEditionId,
+  findMintMetadataId,
+  findRuleSetId,
+  findTokenRecordId,
+} from "@cardinal/common";
 import {
   createCreateOrUpdateInstruction,
   PROGRAM_ID as TOKEN_AUTH_RULES_ID,
@@ -36,8 +41,6 @@ import {
   SYSVAR_INSTRUCTIONS_PUBKEY,
   Transaction,
 } from "@solana/web3.js";
-
-import { findRuleSetId, findTokenRecordId } from "../src";
 
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

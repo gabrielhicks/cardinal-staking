@@ -1,5 +1,4 @@
 import {
-  findAta,
   findMintMetadataId,
   METADATA_PROGRAM_ID,
   tryGetAccount,
@@ -229,7 +228,7 @@ export const withInitStakeMint = async (
   const stakeMintMetadataId = findMintMetadataId(
     params.stakeMintKeypair.publicKey
   );
-  const stakeEntryStakeMintTokenAccountId = await findAta(
+  const stakeEntryStakeMintTokenAccountId = getAssociatedTokenAddressSync(
     params.stakeMintKeypair.publicKey,
     params.stakeEntryId,
     true
