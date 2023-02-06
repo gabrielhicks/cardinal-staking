@@ -12,7 +12,7 @@ use anchor_spl::token::Token;
 use anchor_spl::token::{self};
 use cardinal_token_manager::program::CardinalTokenManager;
 use cardinal_token_manager::{self};
-use mpl_token_metadata::instruction::create_metadata_accounts_v2;
+use mpl_token_metadata::instruction::create_metadata_accounts_v3;
 use mpl_token_metadata::state::Creator;
 use mpl_token_metadata::state::Metadata;
 use mpl_token_metadata::{self};
@@ -121,7 +121,7 @@ pub fn handler(ctx: Context<InitStakeMintCtx>, ix: InitStakeMintIx) -> Result<()
     }
 
     invoke_signed(
-        &create_metadata_accounts_v2(
+        &create_metadata_accounts_v3(
             *ctx.accounts.token_metadata_program.key,
             *ctx.accounts.stake_mint_metadata.key,
             *ctx.accounts.stake_mint.key,
@@ -147,6 +147,7 @@ pub fn handler(ctx: Context<InitStakeMintCtx>, ix: InitStakeMintIx) -> Result<()
             1,
             true,
             true,
+            None,
             None,
             None,
         ),

@@ -690,7 +690,6 @@ export const unstake = async (
   params: {
     stakePoolId: PublicKey;
     originalMintId: PublicKey;
-    skipRewardMintTokenAccount?: boolean;
   }
 ): Promise<Transaction> => {
   /////// derive ids ///////
