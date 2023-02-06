@@ -20,7 +20,7 @@ pub const GROUP_ENTRY_DEFAULT_SIZE: usize = 8 // Anchor discriminator/sighash
  + 1 // bump
  + 32 // group_id
  + 32 // authority
- + 4 + 1 * 32 // stake_entries (1 pubkeys)
+ + 4 + 32 // stake_entries (1 pubkeys)
  + 8 // changed_at
  + 4 // group_cooldown_seconds
  + 4 // group_stake_seconds
@@ -126,7 +126,7 @@ pub fn get_stake_seed(supply: u64, user: Pubkey) -> Pubkey {
     }
 }
 
-pub fn stake_entry_fill_zeros<'info>(stake_entry: &mut Account<StakeEntry>) -> Result<()> {
+pub fn stake_entry_fill_zeros(stake_entry: &mut Account<StakeEntry>) -> Result<()> {
     let stake_entry_account = stake_entry.to_account_info();
     let mut stake_entry_data = stake_entry_account.data.borrow_mut();
     let len = stake_entry_data.len();

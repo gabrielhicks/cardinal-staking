@@ -35,7 +35,7 @@ pub struct InitGroupRewardEntryCtx<'info> {
     system_program: Program<'info, System>,
 }
 
-pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts, 'remaining, 'info, InitGroupRewardEntryCtx>) -> Result<()> {
+pub fn handler(ctx: Context<InitGroupRewardEntryCtx>) -> Result<()> {
     let group_reward_counter = &mut ctx.accounts.group_reward_counter;
     let group_reward_distributor = &mut ctx.accounts.group_reward_distributor;
     let group_reward_entry = &mut ctx.accounts.group_reward_entry;
@@ -100,12 +100,12 @@ pub fn handler<'key, 'accounts, 'remaining, 'info>(ctx: Context<'key, 'accounts,
         }
 
         let authorized_creators = group_reward_distributor.authorized_creators.as_ref();
-        if authorized_creators.is_some() {
+        if let Some(authorized_creators) = authorized_creators {
             if original_mint_metadata.data.creators.is_none() {
                 return Err(error!(ErrorCode::InvalidOriginalMint));
             }
             let creators = original_mint_metadata.data.creators.unwrap();
-            let find = creators.iter().find(|c| authorized_creators.unwrap().contains(&c.address) && c.verified);
+            let find = creators.iter().find(|c| authorized_creators.contains(&c.address) && c.verified);
             if find.is_none() {
                 return Err(error!(ErrorCode::InvalidOriginalMint));
             };

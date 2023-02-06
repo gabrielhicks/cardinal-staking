@@ -18,10 +18,10 @@ pub enum GroupRewardDistributorKind {
 impl From<u8> for GroupRewardDistributorKind {
     fn from(orig: u8) -> Self {
         match orig {
-            1 => return GroupRewardDistributorKind::Mint,
-            2 => return GroupRewardDistributorKind::Treasury,
-            _ => return GroupRewardDistributorKind::Treasury,
-        };
+            1 => GroupRewardDistributorKind::Mint,
+            2 => GroupRewardDistributorKind::Treasury,
+            _ => GroupRewardDistributorKind::Treasury,
+        }
     }
 }
 
@@ -35,11 +35,11 @@ pub enum GroupRewardDistributorMetadataKind {
 impl From<u8> for GroupRewardDistributorMetadataKind {
     fn from(orig: u8) -> Self {
         match orig {
-            1 => return GroupRewardDistributorMetadataKind::NoRestriction,
-            2 => return GroupRewardDistributorMetadataKind::UniqueNames,
-            3 => return GroupRewardDistributorMetadataKind::UniqueSymbols,
-            _ => return GroupRewardDistributorMetadataKind::NoRestriction,
-        };
+            1 => GroupRewardDistributorMetadataKind::NoRestriction,
+            2 => GroupRewardDistributorMetadataKind::UniqueNames,
+            3 => GroupRewardDistributorMetadataKind::UniqueSymbols,
+            _ => GroupRewardDistributorMetadataKind::NoRestriction,
+        }
     }
 }
 
@@ -53,11 +53,11 @@ pub enum GroupRewardDistributorPoolKind {
 impl From<u8> for GroupRewardDistributorPoolKind {
     fn from(orig: u8) -> Self {
         match orig {
-            1 => return GroupRewardDistributorPoolKind::NoRestriction,
-            2 => return GroupRewardDistributorPoolKind::AllFromSinglePool,
-            3 => return GroupRewardDistributorPoolKind::EachFromSeparatePool,
-            _ => return GroupRewardDistributorPoolKind::NoRestriction,
-        };
+            1 => GroupRewardDistributorPoolKind::NoRestriction,
+            2 => GroupRewardDistributorPoolKind::AllFromSinglePool,
+            3 => GroupRewardDistributorPoolKind::EachFromSeparatePool,
+            _ => GroupRewardDistributorPoolKind::NoRestriction,
+        }
     }
 }
 

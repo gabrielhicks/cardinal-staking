@@ -38,7 +38,7 @@ pub fn handler(ctx: Context<RemoveFromGroupEntryCtx>) -> Result<()> {
         return Err(error!(ErrorCode::StakeEntryNotFoundInGroup));
     }
 
-    if group_entry.stake_entries.len() == 0 {
+    if group_entry.stake_entries.is_empty() {
         group_entry.close(ctx.accounts.payer.to_account_info())?;
     } else {
         let new_space = group_entry.try_to_vec()?.len() + 8;
