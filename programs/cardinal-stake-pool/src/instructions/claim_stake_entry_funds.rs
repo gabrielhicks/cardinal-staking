@@ -1,9 +1,11 @@
-use anchor_spl::token::{self, Mint, Token, TokenAccount};
+use anchor_spl::token::Mint;
+use anchor_spl::token::Token;
+use anchor_spl::token::TokenAccount;
+use anchor_spl::token::{self};
 
-use {
-    crate::{errors::ErrorCode, state::*},
-    anchor_lang::prelude::*,
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 pub struct ClaimStakeEntryFundsCtx<'info> {

@@ -1,4 +1,6 @@
-use {crate::state::*, anchor_lang::prelude::*, cardinal_stake_pool::state::GroupStakeEntry};
+use crate::state::*;
+use anchor_lang::prelude::*;
+use cardinal_stake_pool::state::GroupStakeEntry;
 
 #[derive(Accounts)]
 pub struct CloseGroupRewardEntryCtx<'info> {

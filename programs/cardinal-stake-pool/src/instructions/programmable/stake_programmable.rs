@@ -1,14 +1,16 @@
-use mpl_token_metadata::instruction::{DelegateArgs, LockArgs, MetadataInstruction};
-use solana_program::{
-    instruction::Instruction,
-    program::{invoke, invoke_signed},
-};
+use mpl_token_metadata::instruction::DelegateArgs;
+use mpl_token_metadata::instruction::LockArgs;
+use mpl_token_metadata::instruction::MetadataInstruction;
+use solana_program::instruction::Instruction;
+use solana_program::program::invoke;
+use solana_program::program::invoke_signed;
 
-use {
-    crate::{errors::ErrorCode, state::*},
-    anchor_lang::prelude::*,
-    anchor_spl::token::{Mint, Token, TokenAccount},
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use anchor_lang::prelude::*;
+use anchor_spl::token::Mint;
+use anchor_spl::token::Token;
+use anchor_spl::token::TokenAccount;
 
 #[derive(Accounts)]
 pub struct StakeProgrammableCtx<'info> {

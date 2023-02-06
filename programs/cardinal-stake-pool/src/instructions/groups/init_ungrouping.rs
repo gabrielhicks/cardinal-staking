@@ -1,7 +1,7 @@
-use {
-    crate::{errors::ErrorCode, state::*, utils::*},
-    anchor_lang::prelude::*,
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use crate::utils::*;
+use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 pub struct InitUngroupingCtx<'info> {

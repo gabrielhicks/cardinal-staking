@@ -1,9 +1,13 @@
-use {
-    crate::{errors::ErrorCode, state::*, utils::*},
-    anchor_lang::prelude::*,
-    anchor_spl::token::{self, Mint, SetAuthority, Token, TokenAccount},
-    spl_token::instruction::AuthorityType,
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use crate::utils::*;
+use anchor_lang::prelude::*;
+use anchor_spl::token::Mint;
+use anchor_spl::token::SetAuthority;
+use anchor_spl::token::Token;
+use anchor_spl::token::TokenAccount;
+use anchor_spl::token::{self};
+use spl_token::instruction::AuthorityType;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct InitGroupRewardDistributorIx {

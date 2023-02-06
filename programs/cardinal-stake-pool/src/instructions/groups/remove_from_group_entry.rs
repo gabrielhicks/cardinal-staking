@@ -1,8 +1,8 @@
-use {
-    crate::{errors::ErrorCode, state::*, utils::resize_account},
-    anchor_lang::prelude::*,
-    anchor_lang::AccountsClose,
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use crate::utils::resize_account;
+use anchor_lang::prelude::*;
+use anchor_lang::AccountsClose;
 
 #[derive(Accounts)]
 pub struct RemoveFromGroupEntryCtx<'info> {

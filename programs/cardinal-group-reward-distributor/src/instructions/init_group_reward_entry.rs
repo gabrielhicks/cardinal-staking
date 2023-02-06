@@ -1,12 +1,13 @@
-use {
-    crate::{errors::ErrorCode, state::*},
-    anchor_lang::prelude::*,
-    cardinal_reward_distributor::state::RewardEntry,
-    cardinal_stake_pool::state::{GroupStakeEntry, StakeEntry},
-    core::hash::Hash,
-    mpl_token_metadata::{state::Metadata, utils::assert_derivation},
-    std::collections::HashSet,
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use anchor_lang::prelude::*;
+use cardinal_reward_distributor::state::RewardEntry;
+use cardinal_stake_pool::state::GroupStakeEntry;
+use cardinal_stake_pool::state::StakeEntry;
+use core::hash::Hash;
+use mpl_token_metadata::state::Metadata;
+use mpl_token_metadata::utils::assert_derivation;
+use std::collections::HashSet;
 
 #[derive(Accounts)]
 pub struct InitGroupRewardEntryCtx<'info> {

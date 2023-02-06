@@ -1,7 +1,7 @@
-use {
-    crate::{errors::ErrorCode, state::*, utils::resize_account},
-    anchor_lang::prelude::*,
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use crate::utils::resize_account;
+use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
 pub struct AddToGroupEntryCtx<'info> {

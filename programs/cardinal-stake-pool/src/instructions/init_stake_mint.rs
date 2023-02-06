@@ -1,20 +1,23 @@
 use mpl_token_metadata::utils::assert_derivation;
 
-use {
-    crate::{errors::ErrorCode, state::*},
-    anchor_lang::{
-        prelude::*,
-        solana_program::program::{invoke, invoke_signed},
-    },
-    anchor_spl::{
-        associated_token::{self, AssociatedToken},
-        token::{self, Mint, Token},
-    },
-    cardinal_token_manager::{self, program::CardinalTokenManager},
-    mpl_token_metadata::state::{Creator, Metadata},
-    mpl_token_metadata::{self, instruction::create_metadata_accounts_v2},
-    solana_program::{program_pack::Pack, system_instruction::create_account},
-};
+use crate::errors::ErrorCode;
+use crate::state::*;
+use anchor_lang::prelude::*;
+use anchor_lang::solana_program::program::invoke;
+use anchor_lang::solana_program::program::invoke_signed;
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::associated_token::{self};
+use anchor_spl::token::Mint;
+use anchor_spl::token::Token;
+use anchor_spl::token::{self};
+use cardinal_token_manager::program::CardinalTokenManager;
+use cardinal_token_manager::{self};
+use mpl_token_metadata::instruction::create_metadata_accounts_v2;
+use mpl_token_metadata::state::Creator;
+use mpl_token_metadata::state::Metadata;
+use mpl_token_metadata::{self};
+use solana_program::program_pack::Pack;
+use solana_program::system_instruction::create_account;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct InitStakeMintIx {

@@ -1,7 +1,6 @@
-use {
-    crate::{state::*, utils::*},
-    anchor_lang::prelude::*,
-};
+use crate::state::*;
+use crate::utils::*;
+use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct UpdateGroupRewardDistributorIx {

@@ -1,6 +1,8 @@
+use crate::errors::ErrorCode;
+use crate::state::*;
+use anchor_lang::prelude::*;
 use arrayref::array_ref;
 use solana_program::sysvar::{self};
-use {crate::errors::ErrorCode, crate::state::*, anchor_lang::prelude::*};
 
 #[derive(Accounts)]
 pub struct DoubleOrResetTotalStakeSecondsCtx<'info> {

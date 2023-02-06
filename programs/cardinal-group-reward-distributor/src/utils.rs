@@ -1,8 +1,8 @@
-use {
-    anchor_lang::{prelude::*, Result},
-    solana_program::{program::invoke, system_instruction::transfer},
-    std::cmp::Ordering,
-};
+use anchor_lang::prelude::*;
+use anchor_lang::Result;
+use solana_program::program::invoke;
+use solana_program::system_instruction::transfer;
+use std::cmp::Ordering;
 
 pub fn resize_account<'info>(account_info: &AccountInfo<'info>, new_space: usize, payer: &AccountInfo<'info>, system_program: &AccountInfo<'info>) -> Result<()> {
     let rent = Rent::get()?;
