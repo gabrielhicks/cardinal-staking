@@ -1,9 +1,5 @@
-import {
-  Creator,
-  DataV2,
-  Metadata,
-  UpdateMetadataV2,
-} from "@metaplex-foundation/mpl-token-metadata";
+import { findMintMetadataId } from "@cardinal/common";
+import { createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
 import { utils } from "@project-serum/anchor";
 import {
   Keypair,
@@ -23,35 +19,39 @@ const MINT_PUBLIC_KEY = new PublicKey("");
 export const updateFungibleToken = async (cluster = "devnet") => {
   const connection = connectionFor(cluster);
   try {
-    const metadataId = await Metadata.getPDA(MINT_PUBLIC_KEY);
-    const metadataTx = new UpdateMetadataV2(
-      { feePayer: wallet.publicKey },
+    const metadataId = findMintMetadataId(MINT_PUBLIC_KEY);
+    const metadataIx = createCreateMetadataAccountV3Instruction(
       {
         metadata: metadataId,
-        metadataData: new DataV2({
-          name: "",
-          symbol: "",
-          uri: "",
-          sellerFeeBasisPoints: 0,
-          creators: [
-            new Creator({
-              address: wallet.publicKey.toString(),
-              verified: true,
-              share: 100,
-            }),
-          ],
-          collection: null,
-          uses: null,
-        }),
-        isMutable: true,
-        newUpdateAuthority: wallet.publicKey,
-        primarySaleHappened: false,
+        mint: MINT_PUBLIC_KEY,
+        mintAuthority: wallet.publicKey,
+        payer: wallet.publicKey,
         updateAuthority: wallet.publicKey,
+      },
+      {
+        createMetadataAccountArgsV3: {
+          isMutable: true,
+          collectionDetails: null,
+          data: {
+            name: "",
+            symbol: "",
+            uri: "",
+            sellerFeeBasisPoints: 0,
+            creators: [
+              {
+                address: wallet.publicKey,
+                verified: true,
+                share: 100,
+              },
+            ],
+            collection: null,
+            uses: null,
+          },
+        },
       }
     );
-
     const transaction = new Transaction();
-    transaction.instructions = [...metadataTx.instructions];
+    transaction.add(metadataIx);
     transaction.feePayer = wallet.publicKey;
     transaction.recentBlockhash = (
       await connection.getRecentBlockhash("max")
