@@ -18,7 +18,7 @@ import {
 import type { CardinalProvider } from "../workspace";
 import { getProvider } from "../workspace";
 
-describe("Create stake pool", () => {
+describe("Creator allowlist", () => {
   let provider: CardinalProvider;
   const overlayText = "staking";
   let originalMintTokenAccountId: PublicKey;

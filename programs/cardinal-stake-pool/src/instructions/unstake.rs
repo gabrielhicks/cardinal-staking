@@ -38,12 +38,10 @@ pub fn handler(ctx: Context<UnstakeCtx>) -> Result<()> {
     let stake_pool = &mut ctx.accounts.stake_pool;
     let stake_entry = &mut ctx.accounts.stake_entry;
 
+    let seed = get_stake_seed(ctx.accounts.original_mint.supply, ctx.accounts.user.key());
     let original_mint = stake_entry.original_mint;
-    let user = ctx.accounts.user.key();
-    let stake_pool_key = stake_pool.key();
-    let seed = get_stake_seed(ctx.accounts.original_mint.supply, user);
-
-    let stake_entry_seed = [STAKE_ENTRY_PREFIX.as_bytes(), stake_pool_key.as_ref(), original_mint.as_ref(), seed.as_ref(), &[stake_entry.bump]];
+    let stake_pool_id = stake_pool.key();
+    let stake_entry_seed = [STAKE_ENTRY_PREFIX.as_bytes(), stake_pool_id.as_ref(), original_mint.as_ref(), seed.as_ref(), &[stake_entry.bump]];
     let stake_entry_signer = &[&stake_entry_seed[..]];
 
     if stake_entry.grouped == Some(true) {
@@ -105,5 +103,6 @@ pub fn handler(ctx: Context<UnstakeCtx>) -> Result<()> {
     stake_pool.total_staked = stake_pool.total_staked.checked_sub(1).expect("Sub error");
     stake_entry.kind = StakeEntryKind::Permissionless as u8;
     stake_entry_fill_zeros(stake_entry)?;
+
     Ok(())
 }

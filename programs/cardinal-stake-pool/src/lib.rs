@@ -9,6 +9,7 @@ declare_id!("stkBL96RZkjY5ine4TvPihGqW8UHJfch2cokjAPzV8i");
 
 #[program]
 pub mod cardinal_stake_pool {
+
     use super::*;
 
     pub fn init_identifier(ctx: Context<InitIdentifierCtx>) -> Result<()> {
@@ -89,6 +90,15 @@ pub mod cardinal_stake_pool {
 
     pub fn claim_stake_entry_funds(ctx: Context<ClaimStakeEntryFundsCtx>) -> Result<()> {
         claim_stake_entry_funds::handler(ctx)
+    }
+
+    //// programmable ////
+    pub fn stake_programmable(ctx: Context<StakeProgrammableCtx>, amount: u64) -> Result<()> {
+        programmable::stake_programmable::handler(ctx, amount)
+    }
+
+    pub fn unstake_programmable(ctx: Context<UnstakeProgrammableCtx>) -> Result<()> {
+        programmable::unstake_programmable::handler(ctx)
     }
 
     //// stake_booster ////

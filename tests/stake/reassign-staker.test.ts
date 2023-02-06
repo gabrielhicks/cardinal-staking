@@ -1,21 +1,13 @@
-import {
-  tryGetAccount,
-  withFindOrInitAssociatedTokenAccount,
-} from "@cardinal/common";
+import { withFindOrInitAssociatedTokenAccount } from "@cardinal/common";
 import { Wallet } from "@project-serum/anchor";
 import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
 import { BN } from "bn.js";
 
-import { createStakeEntry, createStakePool, unstake } from "../../src";
-import { ReceiptType } from "../../src/programs/stakePool";
+import { createStakePool, stake, unstake } from "../../src";
 import { getStakeEntry } from "../../src/programs/stakePool/accounts";
 import { findStakeEntryId } from "../../src/programs/stakePool/pda";
-import {
-  withClaimReceiptMint,
-  withReassignStakeEntry,
-  withStake,
-} from "../../src/programs/stakePool/transaction";
+import { withReassignStakeEntry } from "../../src/programs/stakePool/transaction";
 import { findStakeEntryIdFromMint } from "../../src/programs/stakePool/utils";
 import { createMasterEditionTx, executeTransaction } from "../utils";
 import type { CardinalProvider } from "../workspace";
@@ -62,34 +54,12 @@ describe("Reassign stake entry", () => {
   });
 
   it("Stake", async () => {
-    let transaction = new Transaction();
-    const stakeEntryId = await findStakeEntryIdFromMint(
-      provider.connection,
-      provider.wallet.publicKey,
-      stakePoolId,
-      originalMintId
-    );
-    const checkStakeEntryData = await tryGetAccount(() =>
-      getStakeEntry(provider.connection, stakeEntryId)
-    );
-    if (!checkStakeEntryData) {
-      [transaction] = await createStakeEntry(
-        provider.connection,
-        provider.wallet,
-        {
-          stakePoolId: stakePoolId,
-          originalMintId: originalMintId,
-        }
-      );
-    }
-
-    await withStake(transaction, provider.connection, provider.wallet, {
+    const transaction = await stake(provider.connection, provider.wallet, {
       stakePoolId: stakePoolId,
       originalMintId: originalMintId,
       userOriginalMintTokenAccountId: originalMintTokenAccountId,
       amount: new BN(1),
     });
-
     await executeTransaction(provider.connection, transaction, provider.wallet);
 
     const stakeEntryData = await getStakeEntry(
@@ -149,39 +119,6 @@ describe("Reassign stake entry", () => {
     expect(stakeEntryData.parsed.lastStaker.toString()).toEqual(
       newStaker.publicKey.toString()
     );
-  });
-
-  it("Claim receipt mint", async () => {
-    const transaction = new Transaction();
-
-    const stakeEntryId = findStakeEntryId(
-      provider.wallet.publicKey,
-      stakePoolId,
-      originalMintId,
-      false
-    );
-
-    await withClaimReceiptMint(transaction, provider.connection, newStaker, {
-      stakePoolId: stakePoolId,
-      stakeEntryId: stakeEntryId,
-      originalMintId: originalMintId,
-      receiptMintId: originalMintId,
-      receiptType: ReceiptType.Original,
-    });
-
-    await executeTransaction(provider.connection, transaction, newStaker);
-
-    const userOriginalMintTokenAccountId = getAssociatedTokenAddressSync(
-      originalMintId,
-      newStaker.publicKey,
-      true
-    );
-    const checkUserOriginalTokenAccount = await getAccount(
-      provider.connection,
-      userOriginalMintTokenAccountId
-    );
-    expect(Number(checkUserOriginalTokenAccount.amount)).toEqual(1);
-    expect(checkUserOriginalTokenAccount.isFrozen).toEqual(true);
   });
 
   it("Unstake", async () => {

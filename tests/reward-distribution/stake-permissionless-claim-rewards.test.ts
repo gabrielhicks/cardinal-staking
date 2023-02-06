@@ -1,4 +1,4 @@
-import { findAta } from "@cardinal/common";
+import { executeTransactions, findAta } from "@cardinal/common";
 import { Wallet } from "@project-serum/anchor";
 import { getAccount } from "@solana/spl-token";
 import {
@@ -187,16 +187,16 @@ describe("Stake and claim permissionless rewards", () => {
       originalMintId
     );
 
-    const transaction = await claimRewards(
+    const [transaction] = await claimRewards(
       provider.connection,
       new Wallet(rewardClaimer),
       {
         stakePoolId: stakePoolId,
-        stakeEntryId: stakeEntryId,
+        stakeEntryIds: [stakeEntryId],
       }
     );
     await expect(
-      executeTransaction(provider.connection, transaction, provider.wallet, {
+      executeTransaction(provider.connection, transaction!, provider.wallet, {
         silent: true,
       })
     ).rejects.toThrow();
@@ -215,18 +215,18 @@ describe("Stake and claim permissionless rewards", () => {
       stakeEntryId
     );
 
-    const transaction = await claimRewards(
+    const transactions = await claimRewards(
       provider.connection,
       new Wallet(rewardClaimer),
       {
         stakePoolId: stakePoolId,
-        stakeEntryId: stakeEntryId,
+        stakeEntryIds: [stakeEntryId],
         lastStaker: oldStakeEntryData.parsed.lastStaker,
       }
     );
-    await executeTransaction(
+    await executeTransactions(
       provider.connection,
-      transaction,
+      transactions,
       new Wallet(rewardClaimer)
     );
 

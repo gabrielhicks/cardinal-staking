@@ -40,6 +40,11 @@ pub use unstake::*;
 pub use update_pool::*;
 pub use update_total_stake_seconds::*;
 
+// programmable
+pub mod programmable;
+pub use programmable::stake_programmable::*;
+pub use programmable::unstake_programmable::*;
+
 // stake_booster
 pub mod stake_booster;
 pub use stake_booster::boost_stake_entry::*;

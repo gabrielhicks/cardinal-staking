@@ -27,7 +27,7 @@ import {
 import type { CardinalProvider } from "../workspace";
 import { getProvider } from "../workspace";
 
-describe("Create stake pool", () => {
+describe("Fungible staking add amount", () => {
   let provider: CardinalProvider;
   let stakePoolId: PublicKey;
   let originalMintTokenAccountId: PublicKey;

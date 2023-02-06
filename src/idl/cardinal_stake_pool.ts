@@ -676,6 +676,163 @@ export type CardinalStakePool = {
       args: [];
     },
     {
+      name: "stakeProgrammable";
+      accounts: [
+        {
+          name: "stakeEntry";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "stakePool";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "originalMint";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "user";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "userOriginalMintTokenAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "userOriginalMintTokenRecord";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "mintMetadata";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "mintEdition";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "authorizationRules";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "tokenMetadataProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "authorizationRulesProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [
+        {
+          name: "amount";
+          type: "u64";
+        }
+      ];
+    },
+    {
+      name: "unstakeProgrammable";
+      accounts: [
+        {
+          name: "stakeEntry";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "stakePool";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "originalMint";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "user";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "userOriginalMintTokenAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "userOriginalMintTokenRecord";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "mintMetadata";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "mintEdition";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "authorizationRules";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "sysvarInstructions";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "tokenMetadataProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "authorizationRulesProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
       name: "initStakeBooster";
       accounts: [
         {
@@ -2390,6 +2547,163 @@ export const IDL: CardinalStakePool = {
         },
         {
           name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "stakeProgrammable",
+      accounts: [
+        {
+          name: "stakeEntry",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "stakePool",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "originalMint",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "user",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "userOriginalMintTokenAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "userOriginalMintTokenRecord",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "mintMetadata",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "mintEdition",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "authorizationRules",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenMetadataProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "authorizationRulesProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [
+        {
+          name: "amount",
+          type: "u64",
+        },
+      ],
+    },
+    {
+      name: "unstakeProgrammable",
+      accounts: [
+        {
+          name: "stakeEntry",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "stakePool",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "originalMint",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "user",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "userOriginalMintTokenAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "userOriginalMintTokenRecord",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "mintMetadata",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "mintEdition",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "authorizationRules",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "sysvarInstructions",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenMetadataProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "authorizationRulesProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
           isMut: false,
           isSigner: false,
         },

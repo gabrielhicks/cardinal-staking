@@ -137,6 +137,7 @@ export const handler = async (
               await withInitStakeEntry(transaction, connection, wallet, {
                 stakePoolId,
                 originalMintId: mintId,
+                stakeEntryId,
               });
               console.log(
                 `>>[${c + 1}/${chunk.length}][${j + 1}/${
@@ -156,7 +157,7 @@ export const handler = async (
                   entries.length
                 }] 2. Reward entry not found for reward distributor - adding reward entry instruction`
               );
-              withInitRewardEntry(transaction, connection, wallet, {
+              await withInitRewardEntry(transaction, connection, wallet, {
                 stakeEntryId,
                 rewardDistributorId,
               });
@@ -199,7 +200,7 @@ export const handler = async (
                   rewardEntry?.parsed.multiplier.toNumber() || 0
                 } => ${multiplierToSet}`
               );
-              withUpdateRewardEntry(transaction, connection, wallet, {
+              await withUpdateRewardEntry(transaction, connection, wallet, {
                 stakePoolId,
                 stakeEntryId,
                 rewardDistributorId,

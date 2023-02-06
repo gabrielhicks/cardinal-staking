@@ -1,3 +1,4 @@
+import type { ParsedIdlAccountData } from "@cardinal/common";
 import { withFindOrInitAssociatedTokenAccount } from "@cardinal/common";
 import { AnchorProvider, BN, Program } from "@project-serum/anchor";
 import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
@@ -8,6 +9,7 @@ import type {
   Transaction,
 } from "@solana/web3.js";
 
+import type { CardinalStakePool } from "../../idl/cardinal_stake_pool";
 import { getMintSupply } from "../../utils";
 import type { REWARD_DISTRIBUTOR_PROGRAM } from "../rewardDistributor";
 import {
@@ -160,3 +162,14 @@ export const getClaimedRewards = async (
   );
   return parsed.rewardsIssued;
 };
+
+export const shouldReturnReceipt = (
+  stakePoolData: ParsedIdlAccountData<"stakePool", CardinalStakePool>,
+  stakeEntryData: ParsedIdlAccountData<"stakeEntry", CardinalStakePool>
+): boolean =>
+  // no cooldown
+  !stakePoolData.cooldownSeconds ||
+  stakePoolData.cooldownSeconds === 0 ||
+  (!!stakeEntryData?.cooldownStartSeconds &&
+    Date.now() / 1000 - stakeEntryData.cooldownStartSeconds.toNumber() >=
+      stakePoolData.cooldownSeconds);

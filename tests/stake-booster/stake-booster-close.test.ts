@@ -21,7 +21,7 @@ import { createMint, executeTransaction } from "../utils";
 import type { CardinalProvider } from "../workspace";
 import { getProvider } from "../workspace";
 
-describe("Create stake pool", () => {
+describe("Stake booster close", () => {
   let provider: CardinalProvider;
   let stakePoolId: PublicKey;
   let paymentMintId: PublicKey;

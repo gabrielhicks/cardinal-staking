@@ -1,4 +1,4 @@
-import { findAta } from "@cardinal/common";
+import { executeTransactions, findAta } from "@cardinal/common";
 import { getAccount } from "@solana/spl-token";
 import { PublicKey, Transaction } from "@solana/web3.js";
 
@@ -179,15 +179,19 @@ describe("Stake and claim rewards", () => {
       stakeEntryId
     );
 
-    const transaction = await claimRewards(
+    const transactions = await claimRewards(
       provider.connection,
       provider.wallet,
       {
         stakePoolId: stakePoolId,
-        stakeEntryId: stakeEntryId,
+        stakeEntryIds: [stakeEntryId],
       }
     );
-    await executeTransaction(provider.connection, transaction, provider.wallet);
+    await executeTransactions(
+      provider.connection,
+      transactions,
+      provider.wallet
+    );
 
     const newStakeEntryData = await getStakeEntry(
       provider.connection,

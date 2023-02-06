@@ -11,7 +11,7 @@ import { createMasterEdition, delay, executeTransaction } from "../utils";
 import type { CardinalProvider } from "../workspace";
 import { getProvider } from "../workspace";
 
-describe("Create stake pool", () => {
+describe("Init pool stake unstake with reset", () => {
   let provider: CardinalProvider;
   let stakePoolId: PublicKey;
   let originalMintTokenAccountId: PublicKey;

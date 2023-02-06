@@ -1,10 +1,10 @@
+import type { ParsedIdlAccountData } from "@cardinal/common";
 import { emptyWallet } from "@cardinal/common";
 import { AnchorProvider, Program } from "@project-serum/anchor";
 import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import type { ConfirmOptions, Connection } from "@solana/web3.js";
 import { Keypair, PublicKey } from "@solana/web3.js";
 
-import type { ParsedIdlAccountData } from "../../accounts";
 import * as STAKE_POOL_TYPES from "../../idl/cardinal_stake_pool";
 
 export const STAKE_POOL_ADDRESS = new PublicKey(

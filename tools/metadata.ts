@@ -2,8 +2,8 @@ import {
   findMintMetadataId,
   getBatchedMultipleAccounts,
 } from "@cardinal/common";
+import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import type { Connection, PublicKey } from "@solana/web3.js";
-import { Metadata } from "mplx-v2";
 import fetch from "node-fetch";
 
 export type MetadataJSON = {

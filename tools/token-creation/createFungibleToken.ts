@@ -1,4 +1,5 @@
 import { findMintMetadataId } from "@cardinal/common";
+import { createCreateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata";
 import { utils } from "@project-serum/anchor";
 import {
   createAssociatedTokenAccountInstruction,
@@ -15,7 +16,6 @@ import {
   SystemProgram,
   Transaction,
 } from "@solana/web3.js";
-import { createCreateMetadataAccountV2Instruction } from "mplx-v2";
 
 import { connectionFor } from "../connection";
 

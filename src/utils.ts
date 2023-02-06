@@ -1,5 +1,9 @@
 import type { AccountData } from "@cardinal/common";
-import { findAta } from "@cardinal/common";
+import { findAta, METADATA_PROGRAM_ID } from "@cardinal/common";
+import {
+  PREFIX as TOKEN_AUTH_RULESET_PREFIX,
+  PROGRAM_ID as TOKEN_AUTH_RULES_ID,
+} from "@metaplex-foundation/mpl-token-auth-rules";
 import type { web3 } from "@project-serum/anchor";
 import { BN } from "@project-serum/anchor";
 import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
@@ -7,12 +11,11 @@ import { getAccount, getMint } from "@solana/spl-token";
 import type {
   ConfirmOptions,
   Connection,
-  PublicKey,
   SendTransactionError,
   Signer,
   Transaction,
 } from "@solana/web3.js";
-import { sendAndConfirmRawTransaction } from "@solana/web3.js";
+import { PublicKey, sendAndConfirmRawTransaction } from "@solana/web3.js";
 
 import type {
   GroupRewardCounterData,
@@ -369,3 +372,30 @@ export const calculatePendingGroupRewards = (
 
   return [groupRewardAmountToReceive, nextRewardsIn];
 };
+
+export const findRuleSetId = (authority: PublicKey, name: string) => {
+  return PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(TOKEN_AUTH_RULESET_PREFIX),
+      authority.toBuffer(),
+      Buffer.from(name),
+    ],
+    TOKEN_AUTH_RULES_ID
+  )[0];
+};
+
+export function findTokenRecordId(
+  mint: PublicKey,
+  token: PublicKey
+): PublicKey {
+  return PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("metadata"),
+      METADATA_PROGRAM_ID.toBuffer(),
+      mint.toBuffer(),
+      Buffer.from("token_record"),
+      token.toBuffer(),
+    ],
+    METADATA_PROGRAM_ID
+  )[0];
+}

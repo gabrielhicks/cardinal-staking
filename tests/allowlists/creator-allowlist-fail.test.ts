@@ -7,7 +7,7 @@ import { createMasterEdition, executeTransaction } from "../utils";
 import type { CardinalProvider } from "../workspace";
 import { getProvider } from "../workspace";
 
-describe("Create stake pool", () => {
+describe("Creator allowlist fail", () => {
   let provider: CardinalProvider;
 
   const overlayText = "staking";

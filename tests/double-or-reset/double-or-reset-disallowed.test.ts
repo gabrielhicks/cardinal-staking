@@ -12,7 +12,7 @@ import { createMasterEdition, executeTransaction } from "../utils";
 import type { CardinalProvider } from "../workspace";
 import { getProvider } from "../workspace";
 
-describe("Create stake pool", () => {
+describe("Double or reset disallowed", () => {
   let provider: CardinalProvider;
   let stakePoolId: PublicKey;
   let originalMintTokenAccountId: PublicKey;
