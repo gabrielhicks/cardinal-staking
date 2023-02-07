@@ -53,5 +53,13 @@ pub fn handler(ctx: Context<AddToGroupEntryCtx>) -> Result<()> {
         &ctx.accounts.system_program.to_account_info(),
     )?;
 
+    let new_space = stake_entry.try_to_vec()?.len() + 8;
+    resize_account(
+        &stake_entry.to_account_info(),
+        new_space,
+        &ctx.accounts.payer.to_account_info(),
+        &ctx.accounts.system_program.to_account_info(),
+    )?;
+
     Ok(())
 }
