@@ -1,5 +1,5 @@
 export type CardinalReceiptManager = {
-  version: "2.0.0";
+  version: "2.0.2";
   name: "cardinal_receipt_manager";
   instructions: [
     {
@@ -569,7 +569,7 @@ export type CardinalReceiptManager = {
 };
 
 export const IDL: CardinalReceiptManager = {
-  version: "2.0.0",
+  version: "2.0.2",
   name: "cardinal_receipt_manager",
   instructions: [
     {
