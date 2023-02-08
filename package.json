@@ -38,7 +38,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@cardinal/common": "^6.1.7",
+    "@cardinal/common": "^7.0.0",
     "@cardinal/payment-manager": "^2.1.1",
     "@cardinal/rewards-center": "^2.4.0",
     "@cardinal/token-manager": "^4.0.3",
