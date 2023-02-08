@@ -16,7 +16,6 @@ import {
   getRemainingAccountsForKind,
   TOKEN_MANAGER_ADDRESS,
   TokenManagerKind,
-  TokenManagerState,
 } from "@cardinal/token-manager/dist/cjs/programs/tokenManager";
 import {
   findMintCounterId,
@@ -36,7 +35,6 @@ import {
   getAccount,
   getAssociatedTokenAddressSync,
   TOKEN_PROGRAM_ID,
-  unpackMint,
 } from "@solana/spl-token";
 import type { Connection, PublicKey, Signer } from "@solana/web3.js";
 import {
@@ -871,12 +869,28 @@ export const unstakeAll = async (
   wallet: Wallet,
   params: {
     stakePoolId: PublicKey;
-    mintInfos: { mintId: PublicKey }[];
+    mintInfos: {
+      mintId: PublicKey;
+      stakeEntryId?: PublicKey;
+      fungible?: boolean;
+    }[];
   }
 ): Promise<{ tx: Transaction; signers?: Signer[] }[][]> => {
   /////// derive ids ///////
-  const mintMetadataIds = params.mintInfos.map(({ mintId }) =>
-    findMintMetadataId(mintId)
+  const mintInfos = params.mintInfos.map(
+    ({ mintId, fungible, stakeEntryId }) => ({
+      mintId,
+      fungible,
+      mintMetadataId: findMintMetadataId(mintId),
+      stakeEntryId:
+        stakeEntryId ??
+        findStakeEntryId(
+          wallet.publicKey,
+          params.stakePoolId,
+          mintId,
+          fungible ?? false
+        ),
+    })
   );
   const rewardDistributorId = findRewardDistributorId(params.stakePoolId);
 
@@ -884,10 +898,17 @@ export const unstakeAll = async (
   const accountData = await fetchAccountDataById(connection, [
     rewardDistributorId,
     params.stakePoolId,
-    ...mintMetadataIds,
-    ...params.mintInfos.map(({ mintId }) => mintId),
+    ...mintInfos.map(({ mintMetadataId }) => mintMetadataId),
+    ...mintInfos.map(({ stakeEntryId }) => stakeEntryId),
   ]);
 
+  const stakePoolInfo = accountData[params.stakePoolId.toString()];
+  if (!stakePoolInfo?.data) throw "Stake pool not found";
+  const stakePoolData = decodeIdlAccount<"stakePool", CardinalStakePool>(
+    stakePoolInfo,
+    "stakePool",
+    STAKE_POOL_IDL
+  );
   const rewardDistributorInfo = accountData[rewardDistributorId.toString()];
   const rewardDistributorData = rewardDistributorInfo
     ? tryDecodeIdlAccount<"rewardDistributor", CardinalRewardDistributor>(
@@ -902,30 +923,16 @@ export const unstakeAll = async (
     : null;
 
   const txs: { tx: Transaction }[] = [];
-  for (const { mintId: originalMintId } of params.mintInfos) {
+  for (const {
+    mintId: originalMintId,
+    stakeEntryId,
+    mintMetadataId,
+  } of mintInfos) {
     /////// deserialize accounts ///////
-    const mintInfo = unpackMint(
-      originalMintId,
-      accountData[originalMintId.toString()] ?? null
-    );
-    const mintMetadataId = findMintMetadataId(originalMintId);
     const metadataAccountInfo = accountData[mintMetadataId.toString()];
     const mintMetadata = metadataAccountInfo
       ? Metadata.deserialize(metadataAccountInfo.data)[0]
       : null;
-    const stakePoolInfo = accountData[params.stakePoolId.toString()];
-    if (!stakePoolInfo?.data) throw "Stake pool not found";
-    const stakePoolData = decodeIdlAccount<"stakePool", CardinalStakePool>(
-      stakePoolInfo,
-      "stakePool",
-      STAKE_POOL_IDL
-    );
-    const stakeEntryId = findStakeEntryId(
-      wallet.publicKey,
-      params.stakePoolId,
-      originalMintId,
-      Number(mintInfo.supply.toString()) > 1
-    );
 
     /////// start transaction ///////
     const tx = new Transaction();
@@ -1035,7 +1042,13 @@ export const unstakeAll = async (
       tx.add(ix);
     } else {
       /////// non-programmable ///////
-      const stakeEntry = await getStakeEntry(connection, stakeEntryId);
+      const stakeEntryInfo = accountData[stakeEntryId.toString()];
+      if (!stakeEntryInfo) throw "Stake entry not found";
+      const stakeEntry = decodeIdlAccount<"stakeEntry", CardinalStakePool>(
+        stakeEntryInfo,
+        "stakeEntry",
+        STAKE_POOL_IDL
+      );
 
       if (
         stakeEntry.parsed.stakeMintClaimed ||
@@ -1048,10 +1061,11 @@ export const unstakeAll = async (
             : stakeEntry.parsed.originalMint;
 
         const tokenManagerId = findTokenManagerAddress(receiptMint);
+
+        // todo network call in loop for token manager data
         const tokenManagerData = await tryNull(() =>
           tokenManager.accounts.getTokenManager(connection, tokenManagerId)
         );
-
         if (
           tokenManagerData &&
           shouldReturnReceipt(stakePoolData.parsed, stakeEntry.parsed)
@@ -1061,7 +1075,7 @@ export const unstakeAll = async (
             .accountsStrict({
               stakeEntry: stakeEntryId,
               receiptMint: receiptMint,
-              tokenManager: tokenManagerData.pubkey,
+              tokenManager: tokenManagerId,
               tokenManagerTokenAccount: getAssociatedTokenAddressSync(
                 receiptMint,
                 tokenManagerId,
@@ -1079,12 +1093,10 @@ export const unstakeAll = async (
               rent: SYSVAR_RENT_PUBKEY,
             })
             .remainingAccounts([
-              ...(tokenManagerData.parsed.state === TokenManagerState.Claimed
-                ? getRemainingAccountsForKind(
-                    receiptMint,
-                    tokenManagerData.parsed.kind
-                  )
-                : []),
+              ...getRemainingAccountsForKind(
+                receiptMint,
+                tokenManagerData.parsed.kind
+              ),
               // assume stake entry receipt mint account is already created
               {
                 pubkey: getAssociatedTokenAddressSync(
