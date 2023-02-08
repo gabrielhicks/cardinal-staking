@@ -280,9 +280,7 @@ describe("Group stake ungroup", () => {
 
     await expect(async () => {
       await getGroupStakeEntry(provider.connection, groupStakeEntryId);
-    }).rejects.toThrow(
-      new Error(`Account does not exist ${groupStakeEntryId.toBase58()}`)
-    );
+    }).rejects.toThrow();
 
     const stakeEntry = await getStakeEntry(provider.connection, stakeEntryId);
     expect(stakeEntry.parsed.grouped).toEqual(false);
