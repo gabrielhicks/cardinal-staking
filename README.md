@@ -13,15 +13,17 @@
 
 ## Background
 
-Cardinal staking encompasses a suite of contracts for issuing and staking NFTs and FTs. The simple program is a stake pool that tracks total stake duration. In addition, there is an implementation of a token minting reward distributor. Cardinal staking works well with any standard NFT collection and also composes with other programs in the Cardinal NFT infrastructure ecosystem.
+Cardinal staking encompasses a suite of contracts for issuing and staking non-fungible and fungible tokens on solana. The simple program is a stake pool that tracks total stake duration of the tokens. The tokens can be staked in a custodial or non-custodial fashion. In addition, there is an implementation of a token minting reward distributor, group reward distributor and a way to distribute single non-token based rewards. Cardinal staking works well with any standard NFT collection and also composes with other programs in the Cardinal NFT infrastructure ecosystem.
 
 ## Packages
 
-| Package                       | Description                              | Version                                                                                                                           | Docs                                                                                                             |
-| :---------------------------- | :--------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
-| `cardinal-stake-pool`         | Stake pool tracking total stake duration | [![Crates.io](https://img.shields.io/crates/v/cardinal-stake-pool)](https://crates.io/crates/cardinal-stake-pool)                 | [![Docs.rs](https://docs.rs/cardinal-stake-pool/badge.svg)](https://docs.rs/cardinal-stake-pool)                 |
-| `cardinal-reward-distributor` | Simple token minting rewards distributor | [![Crates.io](https://img.shields.io/crates/v/cardinal-reward-distributor)](https://crates.io/crates/cardinal-reward-distributor) | [![Docs.rs](https://docs.rs/cardinal-reward-distributor/badge.svg)](https://docs.rs/cardinal-reward-distributor) |
-| `@cardinal/staking`           | TypeScript SDK for staking               | [![npm](https://img.shields.io/npm/v/@cardinal/staking.svg)](https://www.npmjs.com/package/@cardinal/staking)                     | [![Docs](https://img.shields.io/badge/docs-typedoc-blue)](https://cardinal-labs.github.io/cardinal-staking/)     |
+| Package                             | Description                                                                             | Version                                                                                                                                       | Docs                                                                                                                         |
+| :---------------------------------- | :-------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| `cardinal-stake-pool`               | Stake pool tracking total stake duration                                                | [![Crates.io](https://img.shields.io/crates/v/cardinal-stake-pool)](https://crates.io/crates/cardinal-stake-pool)                             | [![Docs.rs](https://docs.rs/cardinal-stake-pool/badge.svg)](https://docs.rs/cardinal-stake-pool)                             |
+| `cardinal-reward-distributor`       | Simple token minting rewards distributor                                                | [![Crates.io](https://img.shields.io/crates/v/cardinal-reward-distributor)](https://crates.io/crates/cardinal-reward-distributor)             | [![Docs.rs](https://docs.rs/cardinal-reward-distributor/badge.svg)](https://docs.rs/cardinal-reward-distributor)             |
+| `cardinal-group-reward-distributor` | Plugin for minting tokens to a collection of grouped tokens across multiple stake pools | [![Crates.io](https://img.shields.io/crates/v/cardinal-group-reward-distributor)](https://crates.io/crates/cardinal-group-reward-distributor) | [![Docs.rs](https://docs.rs/cardinal-group-reward-distributor/badge.svg)](https://docs.rs/cardinal-group-reward-distributor) |
+| `cardinal-receipt-manager`          | Plugin for one-off rewards based on total stake time                                    | [![Crates.io](https://img.shields.io/crates/v/cardinal-receipt-manager)](https://crates.io/crates/cardinal-receipt-manager)                   | [![Docs.rs](https://docs.rs/cardinal-receipt-manager/badge.svg)](https://docs.rs/cardinal-receipt-manager)                   |
+| `@cardinal/staking`                 | TypeScript SDK for staking                                                              | [![npm](https://img.shields.io/npm/v/@cardinal/staking.svg)](https://www.npmjs.com/package/@cardinal/staking)                                 | [![Docs](https://img.shields.io/badge/docs-typedoc-blue)](https://cardinal-labs.github.io/cardinal-staking/)                 |
 
 ## Addresses
 
@@ -29,6 +31,8 @@ Program addresses are the same on devnet, testnet, and mainnet-beta.
 
 - StakePool: [`stkBL96RZkjY5ine4TvPihGqW8UHJfch2cokjAPzV8i`](https://explorer.solana.com/address/stkBL96RZkjY5ine4TvPihGqW8UHJfch2cokjAPzV8i)
 - RewardDistributor: [`rwdNPNPS6zNvtF6FMvaxPRjzu2eC51mXaDT9rmWsojp`](https://explorer.solana.com/address/rwdNPNPS6zNvtF6FMvaxPRjzu2eC51mXaDT9rmWsojp)
+- GroupRewardDistributor: [`grwDL1AZiCaBmTQHTQVhX6wxXKowAnisDZxH7866LUL`](https://explorer.solana.com/address/grwDL1AZiCaBmTQHTQVhX6wxXKowAnisDZxH7866LUL)
+- ReceiptManager: [`rrmevmpXMooxn8Qu6u7RWao93BZn4cKgfjtNMURSc2E`](https://explorer.solana.com/address/rrmevmpXMooxn8Qu6u7RWao93BZn4cKgfjtNMURSc2E)
 
 ## Plugins
 
