@@ -843,11 +843,19 @@ export const unstake = async (
   params: {
     stakePoolId: PublicKey;
     originalMintId: PublicKey;
+    fungible?: boolean;
+    stakeEntryId?: PublicKey;
   }
 ): Promise<Transaction> => {
   const txSeq = await unstakeAll(connection, wallet, {
     stakePoolId: params.stakePoolId,
-    mintInfos: [{ mintId: params.originalMintId }],
+    mintInfos: [
+      {
+        mintId: params.originalMintId,
+        fungible: params.fungible,
+        stakeEntryId: params.stakeEntryId,
+      },
+    ],
   });
   const txs = txSeq[0];
   if (!txs) throw "Failed to unstake";

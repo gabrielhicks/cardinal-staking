@@ -256,6 +256,7 @@ describe("Fungible staking", () => {
     const transaction = await unstake(provider.connection, provider.wallet, {
       stakePoolId: stakePoolId,
       originalMintId: originalMintId,
+      fungible: true,
     });
     await executeTransaction(provider.connection, transaction, provider.wallet);
 
