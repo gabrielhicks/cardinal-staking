@@ -53,7 +53,25 @@ pub fn handler(ctx: Context<AddToGroupEntryCtx>) -> Result<()> {
         &ctx.accounts.system_program.to_account_info(),
     )?;
 
-    let new_space = stake_entry.try_to_vec()?.len() + 8;
+    let new_stake_entry = StakeEntry {
+        bump: group_entry.bump,
+        pool: stake_entry.pool,
+        amount: stake_entry.amount,
+        original_mint: stake_entry.original_mint,
+        original_mint_claimed: stake_entry.original_mint_claimed,
+        last_staker: stake_entry.last_staker,
+        last_staked_at: stake_entry.last_staked_at,
+        total_stake_seconds: stake_entry.total_stake_seconds,
+        stake_mint_claimed: stake_entry.stake_mint_claimed,
+        kind: stake_entry.kind,
+        stake_mint: stake_entry.stake_mint,
+        cooldown_start_seconds: stake_entry.cooldown_start_seconds,
+        last_updated_at: stake_entry.last_updated_at,
+        grouped: stake_entry.grouped,
+    };
+    let new_space = new_stake_entry.try_to_vec()?.len() + 8;
+    stake_entry.set_inner(new_stake_entry);
+
     resize_account(
         &stake_entry.to_account_info(),
         new_space,

@@ -38,6 +38,7 @@ import {
 } from "@solana/spl-token";
 import type { Connection, PublicKey, Signer } from "@solana/web3.js";
 import {
+  ComputeBudgetProgram,
   Keypair,
   SystemProgram,
   SYSVAR_INSTRUCTIONS_PUBKEY,
@@ -710,6 +711,11 @@ export const stakeAll = async (
       mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
       mintMetadata.programmableConfig?.ruleSet
     ) {
+      transaction.add(
+        ComputeBudgetProgram.setComputeUnitLimit({
+          units: 100000000,
+        })
+      );
       /////// programmable ///////
       transaction.add(
         await stakePoolProgram(connection, wallet)
@@ -1025,6 +1031,11 @@ export const unstakeAll = async (
       mintMetadata.programmableConfig?.ruleSet
     ) {
       /////// programmable ///////
+      tx.add(
+        ComputeBudgetProgram.setComputeUnitLimit({
+          units: 100000000,
+        })
+      );
       const ix = await stakePoolProgram(connection, wallet)
         .methods.unstakeProgrammable()
         .accountsStrict({
