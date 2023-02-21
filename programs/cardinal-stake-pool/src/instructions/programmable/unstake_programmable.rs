@@ -1,6 +1,9 @@
 use mpl_token_metadata::instruction::MetadataInstruction;
 use mpl_token_metadata::instruction::RevokeArgs;
 use mpl_token_metadata::instruction::UnlockArgs;
+use mpl_token_metadata::state::TokenDelegateRole;
+use mpl_token_metadata::state::TokenMetadataAccount;
+use mpl_token_metadata::state::TokenRecord;
 use solana_program::instruction::Instruction;
 use solana_program::program::invoke;
 use solana_program::program::invoke_signed;
@@ -164,6 +167,7 @@ pub fn handler(ctx: Context<UnstakeProgrammableCtx>) -> Result<()> {
         stake_entry_signer,
     )?;
 
+    let user_original_mint_token_record = TokenRecord::from_account_info(&ctx.accounts.user_original_mint_token_record.to_account_info())?;
     invoke(
         &Instruction {
             program_id: mpl_token_metadata::id(),
@@ -197,7 +201,15 @@ pub fn handler(ctx: Context<UnstakeProgrammableCtx>) -> Result<()> {
                 // #[account(13, optional, name = "authorization_rules", desc = "Token Authorization Rules account")]
                 AccountMeta::new_readonly(ctx.accounts.authorization_rules.key(), false),
             ],
-            data: MetadataInstruction::Revoke(RevokeArgs::StakingV1 {}).try_to_vec().unwrap(),
+            data: MetadataInstruction::Revoke(
+                if user_original_mint_token_record.delegate_role.is_some() && user_original_mint_token_record.delegate_role.unwrap() == TokenDelegateRole::Migration {
+                    RevokeArgs::MigrationV1
+                } else {
+                    RevokeArgs::StakingV1
+                },
+            )
+            .try_to_vec()
+            .unwrap(),
         },
         &[
             stake_entry.to_account_info(),
