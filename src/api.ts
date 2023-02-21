@@ -607,6 +607,7 @@ export const stakeAll = async (
   const mintInfosWithReceipts = mintInfos.filter(
     (i) => i.receiptType === ReceiptType.Receipt
   );
+  const mintReceiptIds: { [s: string]: PublicKey } = {};
   if (mintInfosWithReceipts.length > 0) {
     for (let i = 0; i < mintInfosWithReceipts.length; i++) {
       const { mintId, stakeEntryId } = mintInfosWithReceipts[i]!;
@@ -656,6 +657,7 @@ export const stakeAll = async (
           symbol: `POOl${stakePoolData.parsed.identifier.toString()}`,
         });
         if (transaction.instructions.length > 0) {
+          mintReceiptIds[mintId.toString()] = stakeMintKeypair.publicKey;
           preTxs.push({ tx: transaction, signers: [stakeMintKeypair] });
         }
       }
@@ -772,10 +774,11 @@ export const stakeAll = async (
       if (receiptType && receiptType !== ReceiptType.None) {
         const receiptMintId =
           receiptType === ReceiptType.Receipt
-            ? stakeEntryData?.parsed?.stakeMint
+            ? mintReceiptIds[originalMintId.toString()] ??
+              stakeEntryData?.parsed?.stakeMint
             : originalMintId;
         if (!receiptMintId) {
-          throw "Stake entry has no stake mint. Initialize stake mint first.";
+          throw "Stake entry has no receipt mint and you are trying to stake using receipts. Initialize receipt mint first.";
         }
         if (
           stakeEntryData?.parsed?.stakeMintClaimed ||
