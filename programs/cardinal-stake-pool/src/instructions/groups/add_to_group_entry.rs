@@ -54,7 +54,7 @@ pub fn handler(ctx: Context<AddToGroupEntryCtx>) -> Result<()> {
     )?;
 
     let new_stake_entry = StakeEntry {
-        bump: group_entry.bump,
+        bump: stake_entry.bump,
         pool: stake_entry.pool,
         amount: stake_entry.amount,
         original_mint: stake_entry.original_mint,

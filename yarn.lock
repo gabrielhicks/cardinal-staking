@@ -325,19 +325,6 @@
     polished "^4.2.2"
     tslib "^2.4.0"
 
-"@cardinal/common@^5.0.2":
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-5.0.7.tgz#f225b9eb4a8e7d780a14d80a1c0ba4c495be2d06"
-  integrity sha512-7sZDczfvNFq9uSiYO94Mfjhf8GIk/644xTFawNtCau127GBK2BBsu06TEGLwfELc9dc0b22g4MWQJC0yoU90ow==
-  dependencies:
-    "@project-serum/anchor" "^0.25.0"
-    "@solana/buffer-layout" "^4.0.0"
-    "@solana/spl-token" "^0.3.5"
-    "@solana/web3.js" "^1.66.2"
-    bignumber.js "^9.1.0"
-    polished "^4.2.2"
-    tslib "^2.4.0"
-
 "@cardinal/common@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@cardinal/common/-/common-6.0.0.tgz#43d4048266b7e61345eca40393d41e3c30331774"
@@ -401,13 +388,13 @@
     "@solana/spl-token" "^0.1.8"
     "@solana/web3.js" "^1.66.2"
 
-"@cardinal/payment-manager@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@cardinal/payment-manager/-/payment-manager-3.0.0.tgz#87aaa1961d80160001a87a4cd49c7d880ce09ede"
-  integrity sha512-ChEaghyV1pcOaY3lz5tPogHxv4IPfSxjTyLOZSAtgHdRpMb3EhXnpYwsgQh2upSof4uYmAjOHNEKXOrRygoTHA==
+"@cardinal/payment-manager@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@cardinal/payment-manager/-/payment-manager-4.0.0.tgz#fc29a5e2c78583cc63ededae04d346db8716bbc9"
+  integrity sha512-AXPaKhwTW+fi+S8uBfYNOGFgT1K+tvrXGzCTXjBHGRu+fp6eI8rW/wE91gZbYZJIFKeVjNugmYVQ1jDNgERHaw==
   dependencies:
-    "@cardinal/common" "^5.0.2"
-    "@metaplex-foundation/mpl-token-metadata" "^2.5.2"
+    "@cardinal/common" "^7.0.0"
+    "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.66.2"
@@ -424,20 +411,20 @@
     "@solana/web3.js" "^1.66.2"
     bn.js "^5.2.0"
 
-"@cardinal/token-manager@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.0.3.tgz#9d39b405072e9befd35be21c0ee7b49851e88657"
-  integrity sha512-WIqikDBTfb7+d4eWD+icPvPwNOraPMnTLOUATMwmvNWmBYUnhHkQ8CuLtyybLJOV67DlLvQrV7u4fY2Cku4EwQ==
+"@cardinal/token-manager@^4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@cardinal/token-manager/-/token-manager-4.3.2.tgz#26a9f3614ee6b84e7ac3a0daa3274d321c032b1b"
+  integrity sha512-+cBzMA7UmHoV4+AZ1li96wYI7L4cUdFb6lycvapeaXNv9AFSRC78goHJgaKTTV1Wvdz/xaXWKIwTC/kYgVjgNw==
   dependencies:
     "@cardinal/common" "^6.1.5"
     "@cardinal/creator-standard" "^2.1.7"
-    "@cardinal/payment-manager" "^3.0.0"
+    "@cardinal/payment-manager" "^4.0.0"
     "@metaplex-foundation/mpl-token-auth-rules" "^1.0.0"
+    "@metaplex-foundation/mpl-token-metadata" "^2.8.3"
     "@msgpack/msgpack" "^2.8.0"
     "@project-serum/anchor" "^0.26.0"
     "@solana/spl-token" "^0.3.6"
     "@solana/web3.js" "^1.34.0"
-    mplx-beta "npm:@metaplex-foundation/mpl-token-metadata@2.8.0"
 
 "@coral-xyz/anchor@0.26.0", "@coral-xyz/anchor@^0.26.0":
   version "0.26.0"
@@ -826,10 +813,10 @@
     "@solana/spl-token" "^0.1.8"
     "@solana/web3.js" "^1.31.0"
 
-"@metaplex-foundation/mpl-token-metadata@^2.5.2":
-  version "2.8.3"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-2.8.3.tgz#8bbaa08240753db871b45b273fdf6355fd00ce93"
-  integrity sha512-rUwp2zqrsxu+1ahhqyeu9ytluroVG7vgLS2eunYfkRL545dl8z0eXLE7A16H9Uejln0abyKiSXUsdV8SoXpJIg==
+"@metaplex-foundation/mpl-token-metadata@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-2.8.1.tgz#c4b137b7d7bfb8e7594a3cecb0a91fab05fe6e57"
+  integrity sha512-zk4neFTPaI5atCiosOHGzLX/7sLbWg4ne7zwJXVsJ0O3RYnj5ynwrWLrnvMaE+qR/6gcFy28JvxPvMexIxjbfA==
   dependencies:
     "@metaplex-foundation/beet" "^0.7.1"
     "@metaplex-foundation/beet-solana" "^0.4.0"
@@ -839,10 +826,10 @@
     bn.js "^5.2.0"
     debug "^4.3.4"
 
-"@metaplex-foundation/mpl-token-metadata@^2.8.1":
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-2.8.1.tgz#c4b137b7d7bfb8e7594a3cecb0a91fab05fe6e57"
-  integrity sha512-zk4neFTPaI5atCiosOHGzLX/7sLbWg4ne7zwJXVsJ0O3RYnj5ynwrWLrnvMaE+qR/6gcFy28JvxPvMexIxjbfA==
+"@metaplex-foundation/mpl-token-metadata@^2.8.3":
+  version "2.8.4"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-2.8.4.tgz#ef73e17060a2bb7a75f5aa9201070f16db462364"
+  integrity sha512-QhEMjmYzwBAiJAzDv8M9GuNLfqExt46oVrIYlKml7htP3RpkG7aEzr24wWlgLos2YoGwabWwg2d+iT9DergCQw==
   dependencies:
     "@metaplex-foundation/beet" "^0.7.1"
     "@metaplex-foundation/beet-solana" "^0.4.0"
@@ -3753,19 +3740,6 @@ mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
-
-"mplx-beta@npm:@metaplex-foundation/mpl-token-metadata@2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@metaplex-foundation/mpl-token-metadata/-/mpl-token-metadata-2.8.0.tgz#a83997e37cd7dbcf571286ac93841c6b27d8a2e8"
-  integrity sha512-Mby7ijTL1rcuRsNElD+Y180G2dJePaTKDJGR2yVAnBfn6SwQD1HTV8Ta5bswhh3fRONPbM8+7kxYGm1iXqtB5A==
-  dependencies:
-    "@metaplex-foundation/beet" "^0.7.1"
-    "@metaplex-foundation/beet-solana" "^0.4.0"
-    "@metaplex-foundation/cusper" "^0.0.2"
-    "@solana/spl-token" "^0.3.6"
-    "@solana/web3.js" "^1.66.2"
-    bn.js "^5.2.0"
-    debug "^4.3.4"
 
 ms@2.0.0:
   version "2.0.0"

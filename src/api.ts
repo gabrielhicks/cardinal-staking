@@ -16,6 +16,7 @@ import {
   getRemainingAccountsForKind,
   TOKEN_MANAGER_ADDRESS,
   TokenManagerKind,
+  withRemainingAccountsForInvalidate,
 } from "@cardinal/token-manager/dist/cjs/programs/tokenManager";
 import {
   findMintCounterId,
@@ -24,6 +25,8 @@ import {
 import { PROGRAM_ID as TOKEN_AUTH_RULES_ID } from "@metaplex-foundation/mpl-token-auth-rules";
 import {
   Metadata,
+  TokenDelegateRole,
+  TokenRecord,
   TokenStandard,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { BN } from "@project-serum/anchor";
@@ -917,6 +920,9 @@ export const unstakeAll = async (
     params.stakePoolId,
     ...mintInfos.map(({ mintMetadataId }) => mintMetadataId),
     ...mintInfos.map(({ stakeEntryId }) => stakeEntryId),
+    ...mintInfos.map(({ mintId }) =>
+      findTokenRecordId(mintId, wallet.publicKey)
+    ),
   ]);
 
   const stakePoolInfo = accountData[params.stakePoolId.toString()];
@@ -949,6 +955,13 @@ export const unstakeAll = async (
     const metadataAccountInfo = accountData[mintMetadataId.toString()];
     const mintMetadata = metadataAccountInfo
       ? Metadata.deserialize(metadataAccountInfo.data)[0]
+      : null;
+    const tokenRecordInfo =
+      accountData[
+        findTokenRecordId(originalMintId, wallet.publicKey).toString()
+      ];
+    const tokenRecordData = tokenRecordInfo
+      ? TokenRecord.fromAccountInfo(tokenRecordInfo)[0]
       : null;
 
     /////// start transaction ///////
@@ -1031,7 +1044,8 @@ export const unstakeAll = async (
     }
     if (
       mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
-      mintMetadata.programmableConfig?.ruleSet
+      mintMetadata.programmableConfig?.ruleSet &&
+      tokenRecordData?.delegateRole !== TokenDelegateRole.Migration
     ) {
       /////// programmable ///////
       tx.add(
@@ -1092,6 +1106,15 @@ export const unstakeAll = async (
           tokenManagerData &&
           shouldReturnReceipt(stakePoolData.parsed, stakeEntry.parsed)
         ) {
+          const remainingAccounts = await withRemainingAccountsForInvalidate(
+            tx,
+            connection,
+            wallet,
+            receiptMint,
+            tokenManagerData,
+            stakeEntryId,
+            mintMetadata
+          );
           const ix = await stakePoolProgram(connection, wallet)
             .methods.returnReceiptMint()
             .accountsStrict({
@@ -1114,22 +1137,7 @@ export const unstakeAll = async (
               tokenManagerProgram: TOKEN_MANAGER_ADDRESS,
               rent: SYSVAR_RENT_PUBKEY,
             })
-            .remainingAccounts([
-              ...getRemainingAccountsForKind(
-                receiptMint,
-                tokenManagerData.parsed.kind
-              ),
-              // assume stake entry receipt mint account is already created
-              {
-                pubkey: getAssociatedTokenAddressSync(
-                  receiptMint,
-                  stakeEntryId,
-                  true
-                ),
-                isSigner: false,
-                isWritable: true,
-              },
-            ])
+            .remainingAccounts(remainingAccounts)
             .instruction();
           tx.add(ix);
         }
