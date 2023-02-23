@@ -1,6 +1,6 @@
 [package]
 name = "cardinal-receipt-manager"
-version = "2.1.0"
+version = "2.1.1"
 description = "Cardinal reward receipt manager"
 edition = "2021"
 homepage = "https://cardinal.so"
@@ -24,7 +24,7 @@ anchor-lang = { version = "0.26.0", features = ["init-if-needed"] }
 anchor-spl = "0.26.0"
 solana-program = "1.10.29"
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
-cardinal-stake-pool = { version = "^2.1.0", path = "../cardinal-stake-pool", features = ["cpi"] }
+cardinal-stake-pool = { version = "^2.1.1", path = "../cardinal-stake-pool", features = ["cpi"] }
 cardinal-payment-manager = { version = "^3.0.0", features = ["cpi"] }
 
 [dev-dependencies]
