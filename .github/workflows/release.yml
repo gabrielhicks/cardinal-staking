@@ -81,7 +81,7 @@ jobs:
           anchor_git: ${{ env.ANCHOR_GIT }}
           anchor_version: ${{ env.ANCHOR_VERSION }}
       - name: Build programs
-        run: anchor build --verifiable
+        run: anchor build --verifiable --solana-version ${{ env.SOLANA_VERSION }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
