@@ -5,7 +5,6 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token::Mint;
 use anchor_spl::token::Token;
 use anchor_spl::token::TokenAccount;
-use anchor_spl::token::{self};
 use mpl_token_metadata::instruction::MetadataInstruction;
 use mpl_token_metadata::instruction::TransferArgs;
 use solana_program::instruction::Instruction;
@@ -107,16 +106,6 @@ pub fn handler(ctx: Context<UnstakeCustodialProgrammableCtx>) -> Result<()> {
             return Err(error!(ErrorCode::InvalidStakeEntryStakeTokenAccount));
         }
     }
-
-    // give back original mint to user
-    let cpi_accounts = token::Transfer {
-        from: ctx.accounts.stake_entry_original_mint_token_account.to_account_info(),
-        to: ctx.accounts.user_original_mint_token_account.to_account_info(),
-        authority: stake_entry.to_account_info(),
-    };
-    let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_context = CpiContext::new(cpi_program, cpi_accounts).with_signer(stake_entry_signer);
-    token::transfer(cpi_context, stake_entry.amount)?;
 
     invoke_signed(
         &Instruction {
