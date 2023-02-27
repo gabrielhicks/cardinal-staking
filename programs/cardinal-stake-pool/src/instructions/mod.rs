@@ -43,6 +43,7 @@ pub use update_total_stake_seconds::*;
 // programmable
 pub mod programmable;
 pub use programmable::stake_programmable::*;
+pub use programmable::unstake_custodial_programmable::*;
 pub use programmable::unstake_programmable::*;
 
 // stake_booster

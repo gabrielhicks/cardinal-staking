@@ -102,6 +102,10 @@ pub mod cardinal_stake_pool {
         programmable::unstake_programmable::handler(ctx)
     }
 
+    pub fn unstake_custodial_programmable(ctx: Context<UnstakeCustodialProgrammableCtx>) -> Result<()> {
+        programmable::unstake_custodial_programmable::handler(ctx)
+    }
+
     //// stake_booster ////
     pub fn init_stake_booster(ctx: Context<InitStakeBoosterCtx>, ix: InitStakeBoosterIx) -> Result<()> {
         stake_booster::init_stake_booster::handler(ctx, ix)
