@@ -902,6 +902,10 @@ export const unstakeAll = async (
       mintId,
       fungible,
       mintMetadataId: findMintMetadataId(mintId),
+      userOriginalMintTokenAccountId: getAssociatedTokenAddressSync(
+        mintId,
+        wallet.publicKey
+      ),
       stakeEntryId:
         stakeEntryId ??
         findStakeEntryId(
@@ -920,8 +924,8 @@ export const unstakeAll = async (
     params.stakePoolId,
     ...mintInfos.map(({ mintMetadataId }) => mintMetadataId),
     ...mintInfos.map(({ stakeEntryId }) => stakeEntryId),
-    ...mintInfos.map(({ mintId }) =>
-      findTokenRecordId(mintId, wallet.publicKey)
+    ...mintInfos.map(({ mintId, userOriginalMintTokenAccountId }) =>
+      findTokenRecordId(mintId, userOriginalMintTokenAccountId)
     ),
   ]);
 
@@ -950,6 +954,7 @@ export const unstakeAll = async (
     mintId: originalMintId,
     stakeEntryId,
     mintMetadataId,
+    userOriginalMintTokenAccountId,
   } of mintInfos) {
     /////// deserialize accounts ///////
     const metadataAccountInfo = accountData[mintMetadataId.toString()];
@@ -958,7 +963,10 @@ export const unstakeAll = async (
       : null;
     const tokenRecordInfo =
       accountData[
-        findTokenRecordId(originalMintId, wallet.publicKey).toString()
+        findTokenRecordId(
+          originalMintId,
+          userOriginalMintTokenAccountId
+        ).toString()
       ];
     const tokenRecordData = tokenRecordInfo
       ? TokenRecord.fromAccountInfo(tokenRecordInfo)[0]
@@ -968,10 +976,7 @@ export const unstakeAll = async (
     const tx = new Transaction();
 
     /////// init user token account ///////
-    const userOriginalMintTokenAccountId = getAssociatedTokenAddressSync(
-      originalMintId,
-      wallet.publicKey
-    );
+
     tx.add(
       createAssociatedTokenAccountIdempotentInstruction(
         wallet.publicKey,
