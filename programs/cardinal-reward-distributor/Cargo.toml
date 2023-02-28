@@ -1,6 +1,6 @@
 [package]
 name = "cardinal-reward-distributor"
-version = "2.1.1"
+version = "2.1.2"
 description = "Cardinal reward distributor"
 edition = "2021"
 homepage = "https://cardinal.so"
@@ -24,7 +24,7 @@ anchor-lang = { version = "0.26.0", features = ["init-if-needed"] }
 anchor-spl = "0.26.0"
 solana-program = "1.10.29"
 spl-token = { version = "3.2.0", features = ["no-entrypoint"] }
-cardinal-stake-pool = { version = "^2.1.1", path = "../cardinal-stake-pool", features = ["cpi"] }
+cardinal-stake-pool = { version = "^2.1.2", path = "../cardinal-stake-pool", features = ["cpi"] }
 
 [dev-dependencies]
 proptest = { version = "1.0" }
