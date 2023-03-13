@@ -1,5 +1,5 @@
 import { executeTransactions, findAta } from "@cardinal/common";
-import { Wallet } from "@project-serum/anchor";
+import { Wallet } from "@coral-xyz/anchor";
 import { getAccount } from "@solana/spl-token";
 import {
   Keypair,

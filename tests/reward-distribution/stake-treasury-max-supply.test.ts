@@ -1,5 +1,5 @@
 import { executeTransactions, findAta, withWrapSol } from "@cardinal/common";
-import { BN } from "@project-serum/anchor";
+import { BN } from "@coral-xyz/anchor";
 import { getAccount } from "@solana/spl-token";
 import type { Keypair } from "@solana/web3.js";
 import { LAMPORTS_PER_SOL, PublicKey, Transaction } from "@solana/web3.js";

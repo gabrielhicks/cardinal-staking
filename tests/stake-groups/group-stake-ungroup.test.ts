@@ -1,4 +1,4 @@
-import { Wallet } from "@project-serum/anchor";
+import { Wallet } from "@coral-xyz/anchor";
 import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import type { PublicKey } from "@solana/web3.js";
 import { Transaction } from "@solana/web3.js";

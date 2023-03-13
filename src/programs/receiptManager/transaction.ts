@@ -4,8 +4,8 @@ import {
 } from "@cardinal/common";
 import { PAYMENT_MANAGER_ADDRESS } from "@cardinal/payment-manager";
 import { getPaymentManager } from "@cardinal/payment-manager/dist/cjs/accounts";
-import type { BN } from "@project-serum/anchor";
-import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
+import type { BN } from "@coral-xyz/anchor";
+import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import type { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";

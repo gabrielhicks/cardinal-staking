@@ -1,5 +1,5 @@
 import { tryGetAccount } from "@cardinal/common";
-import { Program } from "@project-serum/anchor";
+import { Program } from "@coral-xyz/anchor";
 import type { PublicKey } from "@solana/web3.js";
 import { Keypair, Transaction } from "@solana/web3.js";
 import { BN } from "bn.js";

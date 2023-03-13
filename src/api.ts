@@ -22,6 +22,8 @@ import {
   findMintCounterId,
   findTokenManagerAddress,
 } from "@cardinal/token-manager/dist/cjs/programs/tokenManager/pda";
+import { BN } from "@coral-xyz/anchor";
+import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import { PROGRAM_ID as TOKEN_AUTH_RULES_ID } from "@metaplex-foundation/mpl-token-auth-rules";
 import {
   Metadata,
@@ -29,8 +31,6 @@ import {
   TokenRecord,
   TokenStandard,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { BN } from "@project-serum/anchor";
-import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import type { Account } from "@solana/spl-token";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -1019,6 +1019,12 @@ export const unstakeAll = async (
           .instruction();
         tx.add(ix);
       }
+      const stakeEntryInfo = accountData[stakeEntryId.toString()]!;
+      const stakeEntryData = decodeIdlAccount<"stakeEntry", CardinalStakePool>(
+        stakeEntryInfo,
+        "stakeEntry",
+        STAKE_POOL_IDL
+      );
       const ix = await rewardDistributorProgram(connection, wallet)
         .methods.claimRewards()
         .accountsStrict({
@@ -1045,7 +1051,15 @@ export const unstakeAll = async (
           },
         ])
         .instruction();
-      tx.add(ix);
+      if (
+        !(
+          rewardDistributorData.parsed.maxRewardSecondsReceived &&
+          stakeEntryData.parsed.totalStakeSeconds >
+            rewardDistributorData.parsed.maxRewardSecondsReceived
+        )
+      ) {
+        tx.add(ix);
+      }
     }
     if (
       mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&

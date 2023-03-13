@@ -2,7 +2,7 @@ import { tryGetAccount } from "@cardinal/common";
 import { getPaymentManager } from "@cardinal/payment-manager/dist/cjs/accounts";
 import { findPaymentManagerAddress } from "@cardinal/payment-manager/dist/cjs/pda";
 import { withInit } from "@cardinal/payment-manager/dist/cjs/transaction";
-import { BN, Wallet } from "@project-serum/anchor";
+import { BN, Wallet } from "@coral-xyz/anchor";
 import { Keypair, PublicKey, Transaction } from "@solana/web3.js";
 
 import { createStakePool } from "../../src";

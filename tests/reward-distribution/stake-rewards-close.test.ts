@@ -1,5 +1,5 @@
 import { findAta, tryGetAccount } from "@cardinal/common";
-import { BN } from "@project-serum/anchor";
+import { BN } from "@coral-xyz/anchor";
 import { getAccount } from "@solana/spl-token";
 import { PublicKey, Transaction } from "@solana/web3.js";
 

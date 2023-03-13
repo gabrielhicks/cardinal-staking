@@ -1,5 +1,5 @@
 import { executeTransactions, findAta } from "@cardinal/common";
-import { BN } from "@project-serum/anchor";
+import { BN } from "@coral-xyz/anchor";
 import { getAccount } from "@solana/spl-token";
 import { PublicKey, Transaction } from "@solana/web3.js";
 
@@ -153,7 +153,12 @@ describe("Stake and claim rewards up to max reward seconds", () => {
     await executeTransactions(
       provider.connection,
       transactions,
-      provider.wallet
+      provider.wallet,
+      {
+        errorHandler: () => {
+          throw Error("Error occurred");
+        },
+      }
     );
 
     const newStakeEntryData = await getStakeEntry(
@@ -207,11 +212,6 @@ describe("Stake and claim rewards up to max reward seconds", () => {
       stakePoolId,
       originalMintId
     );
-    const oldStakeEntryData = await getStakeEntry(
-      provider.connection,
-      stakeEntryId
-    );
-
     const transaction = await claimRewards(
       provider.connection,
       provider.wallet,
@@ -220,53 +220,13 @@ describe("Stake and claim rewards up to max reward seconds", () => {
         stakeEntryIds: [stakeEntryId],
       }
     );
-    await executeTransactions(
-      provider.connection,
-      transaction,
-      provider.wallet
-    );
-
-    const newStakeEntryData = await getStakeEntry(
-      provider.connection,
-      stakeEntryId
-    );
-    expect(newStakeEntryData.parsed.lastStaker.toString()).toEqual(
-      provider.wallet.publicKey.toString()
-    );
-    expect(newStakeEntryData.parsed.lastUpdatedAt).not.toEqual(null);
-    expect(oldStakeEntryData.parsed.lastUpdatedAt).not.toEqual(null);
-    expect(newStakeEntryData.parsed.lastUpdatedAt?.toNumber()).toBeGreaterThan(
-      oldStakeEntryData.parsed.lastUpdatedAt?.toNumber() ?? 0
-    );
-    expect(
-      newStakeEntryData.parsed.totalStakeSeconds.toNumber()
-    ).toBeGreaterThan(oldStakeEntryData.parsed.totalStakeSeconds.toNumber());
-
-    const userRewardMintTokenAccountId = await findAta(
-      rewardMintId,
-      provider.wallet.publicKey,
-      true
-    );
-
-    const checkUserRewardTokenAccount = await getAccount(
-      provider.connection,
-      userRewardMintTokenAccountId
-    );
-    expect(Number(checkUserRewardTokenAccount.amount)).toEqual(
-      maxRewardSeconds
-    );
-
-    const userOriginalMintTokenAccountId = await findAta(
-      originalMintId,
-      provider.wallet.publicKey,
-      true
-    );
-    const checkUserOriginalTokenAccount = await getAccount(
-      provider.connection,
-      userOriginalMintTokenAccountId
-    );
-    expect(Number(checkUserOriginalTokenAccount.amount)).toEqual(1);
-    expect(checkUserOriginalTokenAccount.isFrozen).toEqual(true);
+    await expect(
+      executeTransactions(provider.connection, transaction, provider.wallet, {
+        errorHandler: () => {
+          throw Error("Error occurred");
+        },
+      })
+    ).rejects.toThrow();
   });
 
   it("Unstake", async () => {

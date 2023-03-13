@@ -1,6 +1,6 @@
 import { findMintMetadataId } from "@cardinal/common";
+import { utils } from "@coral-xyz/anchor";
 import { createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
-import { utils } from "@project-serum/anchor";
 import {
   Keypair,
   PublicKey,

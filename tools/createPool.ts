@@ -1,5 +1,5 @@
 import { executeTransaction } from "@cardinal/common";
-import { utils, Wallet } from "@project-serum/anchor";
+import { utils, Wallet } from "@coral-xyz/anchor";
 import { Keypair, Transaction } from "@solana/web3.js";
 
 import { withInitStakePool } from "../src/programs/stakePool/transaction";

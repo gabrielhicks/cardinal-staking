@@ -2,7 +2,7 @@ import { findAta, tryGetAccount, withWrapSol } from "@cardinal/common";
 import { getPaymentManager } from "@cardinal/payment-manager/dist/cjs/accounts";
 import { findPaymentManagerAddress } from "@cardinal/payment-manager/dist/cjs/pda";
 import { withInit } from "@cardinal/payment-manager/dist/cjs/transaction";
-import { BN, Wallet } from "@project-serum/anchor";
+import { BN, Wallet } from "@coral-xyz/anchor";
 import { getAccount } from "@solana/spl-token";
 import {
   Keypair,

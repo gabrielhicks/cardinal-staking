@@ -4,6 +4,7 @@ import {
   findRuleSetId,
   findTokenRecordId,
 } from "@cardinal/common";
+import type { Wallet } from "@coral-xyz/anchor/dist/cjs/provider";
 import {
   createCreateOrUpdateInstruction,
   PROGRAM_ID as TOKEN_AUTH_RULES_ID,
@@ -16,7 +17,6 @@ import {
   TokenStandard,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { encode } from "@msgpack/msgpack";
-import type { Wallet } from "@project-serum/anchor/dist/cjs/provider";
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
