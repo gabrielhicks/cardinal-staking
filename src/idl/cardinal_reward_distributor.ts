@@ -555,6 +555,11 @@ export type CardinalRewardDistributor = {
       code: 6015;
       name: "InvalidPayer";
       msg: "Invalid payer";
+    },
+    {
+      code: 6016;
+      name: "MaxRewardSecondsClaimed";
+      msg: "Max reward seconds claimed";
     }
   ];
 };
@@ -1116,6 +1121,11 @@ export const IDL: CardinalRewardDistributor = {
       code: 6015,
       name: "InvalidPayer",
       msg: "Invalid payer",
+    },
+    {
+      code: 6016,
+      name: "MaxRewardSecondsClaimed",
+      msg: "Max reward seconds claimed",
     },
   ],
 };
