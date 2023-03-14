@@ -1,5 +1,5 @@
 export type CardinalStakePool = {
-  version: "2.2.0";
+  version: "2.2.1";
   name: "cardinal_stake_pool";
   instructions: [
     {
@@ -669,6 +669,32 @@ export type CardinalStakePool = {
         },
         {
           name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
+      name: "resetStakeEntryBump";
+      accounts: [
+        {
+          name: "stakeEntry";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "stakePool";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "user";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "originalMint";
           isMut: false;
           isSigner: false;
         }
@@ -1968,7 +1994,7 @@ export type CardinalStakePool = {
 };
 
 export const IDL: CardinalStakePool = {
-  version: "2.2.0",
+  version: "2.2.1",
   name: "cardinal_stake_pool",
   instructions: [
     {
@@ -2638,6 +2664,32 @@ export const IDL: CardinalStakePool = {
         },
         {
           name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "resetStakeEntryBump",
+      accounts: [
+        {
+          name: "stakeEntry",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "stakePool",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "user",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "originalMint",
           isMut: false,
           isSigner: false,
         },

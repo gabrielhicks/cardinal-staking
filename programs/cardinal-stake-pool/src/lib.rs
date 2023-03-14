@@ -93,6 +93,10 @@ pub mod cardinal_stake_pool {
         claim_stake_entry_funds::handler(ctx)
     }
 
+    pub fn reset_stake_entry_bump(ctx: Context<ResetStakeEntryBumpCtx>) -> Result<()> {
+        reset_stake_entry_bump::handler(ctx)
+    }
+
     //// programmable ////
     pub fn stake_programmable(ctx: Context<StakeProgrammableCtx>, amount: u64) -> Result<()> {
         programmable::stake_programmable::handler(ctx, amount)
