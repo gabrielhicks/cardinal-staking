@@ -5,6 +5,7 @@ use anchor_spl::token::Mint;
 
 #[derive(Accounts)]
 pub struct ResetStakeEntryBumpCtx<'info> {
+    #[account(mut)]
     stake_entry: Box<Account<'info, StakeEntry>>,
     #[account(mut)]
     stake_pool: Box<Account<'info, StakePool>>,
