@@ -11,6 +11,7 @@ import * as initializeEntriesAndSetMultipliers from "./admin-actions/initializeE
 import * as updateMultipliersOnRules from "./admin-actions/updateMultipliersOnRules";
 import * as getAllStakePools from "./analytics/getAllStakePools";
 import * as stakedTokensBreakdownByWallet from "./analytics/stakedTokensBreakdownByWallet";
+import * as stakedTokensTimeRange from "./analytics/stakedTokensTimeRange";
 import { connectionFor } from "./connection";
 import * as reclaimFunds from "./reward-distributor/reclaimFunds";
 import * as transferTokens from "./reward-distributor/transferTokens";
@@ -78,6 +79,7 @@ void yargs(hideBin(process.argv))
   })
   // analytics
   .command(commandBuilder(stakedTokensBreakdownByWallet))
+  .command(commandBuilder(stakedTokensTimeRange))
   .command(commandBuilder(getAllStakePools))
   // admin-actions
   .command(commandBuilder(updateMultipliersOnRules))
