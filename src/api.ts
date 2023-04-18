@@ -1166,6 +1166,11 @@ export const unstakeAll = async (
       const program = stakePoolProgram(connection, wallet);
 
       if (mintMetadata?.programmableConfig?.ruleSet) {
+        tx.add(
+          ComputeBudgetProgram.setComputeUnitLimit({
+            units: 100000000,
+          })
+        );
         const ix = await program.methods
           .unstakeCustodialProgrammable()
           .accountsStrict({
