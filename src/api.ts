@@ -971,6 +971,13 @@ export const unstakeAll = async (
     const tokenRecordData = tokenRecordInfo
       ? TokenRecord.fromAccountInfo(tokenRecordInfo)[0]
       : null;
+    const stakeEntryInfo = accountData[stakeEntryId.toString()];
+    if (!stakeEntryInfo) throw "Stake entry not found";
+    const stakeEntry = decodeIdlAccount<"stakeEntry", CardinalStakePool>(
+      stakeEntryInfo,
+      "stakeEntry",
+      STAKE_POOL_IDL
+    );
 
     /////// start transaction ///////
     const tx = new Transaction();
@@ -1019,12 +1026,6 @@ export const unstakeAll = async (
           .instruction();
         tx.add(ix);
       }
-      const stakeEntryInfo = accountData[stakeEntryId.toString()]!;
-      const stakeEntryData = decodeIdlAccount<"stakeEntry", CardinalStakePool>(
-        stakeEntryInfo,
-        "stakeEntry",
-        STAKE_POOL_IDL
-      );
       const ix = await rewardDistributorProgram(connection, wallet)
         .methods.claimRewards()
         .accountsStrict({
@@ -1054,7 +1055,7 @@ export const unstakeAll = async (
       if (
         !(
           rewardDistributorData.parsed.maxRewardSecondsReceived &&
-          stakeEntryData.parsed.totalStakeSeconds >
+          stakeEntry.parsed.totalStakeSeconds >
             rewardDistributorData.parsed.maxRewardSecondsReceived
         )
       ) {
@@ -1093,18 +1094,25 @@ export const unstakeAll = async (
           sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
           authorizationRulesProgram: TOKEN_AUTH_RULES_ID,
         })
+        .remainingAccounts(
+          stakeEntry.parsed.stakeMint
+            ? [
+                {
+                  pubkey: getAssociatedTokenAddressSync(
+                    stakeEntry.parsed.stakeMint,
+                    stakeEntryId,
+                    true
+                  ),
+                  isSigner: false,
+                  isWritable: false,
+                },
+              ]
+            : []
+        )
         .instruction();
       tx.add(ix);
     } else {
       /////// non-programmable ///////
-      const stakeEntryInfo = accountData[stakeEntryId.toString()];
-      if (!stakeEntryInfo) throw "Stake entry not found";
-      const stakeEntry = decodeIdlAccount<"stakeEntry", CardinalStakePool>(
-        stakeEntryInfo,
-        "stakeEntry",
-        STAKE_POOL_IDL
-      );
-
       if (
         stakeEntry.parsed.stakeMintClaimed ||
         stakeEntry.parsed.originalMintClaimed
@@ -1199,6 +1207,21 @@ export const unstakeAll = async (
             authorizationRulesProgram: TOKEN_AUTH_RULES_ID,
             systemProgram: SystemProgram.programId,
           })
+          .remainingAccounts(
+            stakeEntry.parsed.stakeMint
+              ? [
+                  {
+                    pubkey: getAssociatedTokenAddressSync(
+                      stakeEntry.parsed.stakeMint,
+                      stakeEntryId,
+                      true
+                    ),
+                    isSigner: false,
+                    isWritable: false,
+                  },
+                ]
+              : []
+          )
           .instruction();
         tx.add(ix);
       } else {
