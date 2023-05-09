@@ -714,7 +714,7 @@ export const stakeAll = async (
 
     if (
       mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
-      mintMetadata.programmableConfig?.ruleSet
+      mintMetadata.programmableConfig
     ) {
       transaction.add(
         ComputeBudgetProgram.setComputeUnitLimit({
@@ -740,7 +740,8 @@ export const stakeAll = async (
             ),
             mintMetadata: mintMetadataId,
             mintEdition: findMintEditionId(originalMintId),
-            authorizationRules: mintMetadata.programmableConfig?.ruleSet,
+            authorizationRules:
+              mintMetadata.programmableConfig?.ruleSet ?? METADATA_PROGRAM_ID,
             sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
             authorizationRulesProgram: TOKEN_AUTH_RULES_ID,
           })
@@ -1064,7 +1065,7 @@ export const unstakeAll = async (
     }
     if (
       mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
-      mintMetadata.programmableConfig?.ruleSet &&
+      mintMetadata.programmableConfig &&
       tokenRecordData?.delegateRole === TokenDelegateRole.Staking
     ) {
       /////// programmable ///////
@@ -1090,7 +1091,8 @@ export const unstakeAll = async (
           ),
           mintMetadata: mintMetadataId,
           mintEdition: findMintEditionId(originalMintId),
-          authorizationRules: mintMetadata.programmableConfig?.ruleSet,
+          authorizationRules:
+            mintMetadata.programmableConfig?.ruleSet ?? METADATA_PROGRAM_ID,
           sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
           authorizationRulesProgram: TOKEN_AUTH_RULES_ID,
         })
@@ -1173,7 +1175,7 @@ export const unstakeAll = async (
         getAssociatedTokenAddressSync(originalMintId, stakeEntryId, true);
       const program = stakePoolProgram(connection, wallet);
 
-      if (mintMetadata?.programmableConfig?.ruleSet) {
+      if (mintMetadata?.programmableConfig) {
         tx.add(
           ComputeBudgetProgram.setComputeUnitLimit({
             units: 100000000,
@@ -1199,7 +1201,8 @@ export const unstakeAll = async (
             ),
             mintMetadata: mintMetadataId,
             mintEdition: findMintEditionId(originalMintId),
-            authorizationRules: mintMetadata.programmableConfig?.ruleSet,
+            authorizationRules:
+              mintMetadata.programmableConfig?.ruleSet ?? METADATA_PROGRAM_ID,
             sysvarInstructions: SYSVAR_INSTRUCTIONS_PUBKEY,
             tokenProgram: TOKEN_PROGRAM_ID,
             associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
