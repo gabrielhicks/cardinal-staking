@@ -1066,7 +1066,7 @@ export const unstakeAll = async (
     if (
       mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
       mintMetadata.programmableConfig &&
-      tokenRecordData?.delegateRole === TokenDelegateRole.Staking
+      (tokenRecordData?.delegateRole === TokenDelegateRole.Staking || tokenRecordData?.delegateRole === TokenDelegateRole.Migration)
     ) {
       /////// programmable ///////
       tx.add(
@@ -1113,10 +1113,6 @@ export const unstakeAll = async (
         )
         .instruction();
       tx.add(ix);
-    } else if (mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
-      mintMetadata.programmableConfig &&
-      tokenRecordData?.delegateRole === TokenDelegateRole.Migration) {
-
     } else {
       /////// non-programmable ///////
       if (
