@@ -114,6 +114,8 @@ pub fn handler(ctx: Context<UnstakeProgrammableCtx>) -> Result<()> {
     stake_entry.kind = StakeEntryKind::Permissionless as u8;
     stake_entry_fill_zeros(stake_entry)?;
 
+    let user_original_mint_token_record = TokenRecord::from_account_info(ctx.accounts.user_original_mint_token_record)?;
+
     invoke_signed(
         &Instruction {
             program_id: mpl_token_metadata::id(),
@@ -164,56 +166,111 @@ pub fn handler(ctx: Context<UnstakeProgrammableCtx>) -> Result<()> {
         stake_entry_signer,
     )?;
 
-    invoke(
-        &Instruction {
-            program_id: mpl_token_metadata::id(),
-            accounts: vec![
-                // #[account(0, optional, writable, name="delegate_record", desc="Delegate record account")]
-                AccountMeta::new_readonly(mpl_token_metadata::id(), false),
-                // #[account(1, name="delegate", desc="Owner of the delegated account")]
-                AccountMeta::new_readonly(stake_entry.key(), false),
-                // #[account(2, writable, name = "metadata", desc = "Metadata account")]
-                AccountMeta::new(ctx.accounts.mint_metadata.key(), false),
-                // #[account(3, optional, name = "master_edition", desc = "Master Edition account")]
-                AccountMeta::new_readonly(ctx.accounts.mint_edition.key(), false),
-                // #[account(4, optional, writable, name = "token_record", desc = "Token record account")]
-                AccountMeta::new(ctx.accounts.user_original_mint_token_record.key(), false),
-                // #[account(5, name = "mint", desc = "Mint of metadata")]
-                AccountMeta::new_readonly(ctx.accounts.original_mint.key(), false),
-                // #[account(6, optional, writable, name = "token", desc = "Token account of mint")]
-                AccountMeta::new(ctx.accounts.user_original_mint_token_account.key(), false),
-                // #[account(7, signer, name = "authority", desc = "Update authority or token owner")]
-                AccountMeta::new_readonly(ctx.accounts.user.key(), true),
-                // #[account(8, signer, writable, name = "payer", desc = "Payer")]
-                AccountMeta::new(ctx.accounts.user.key(), true),
-                // #[account(9, name = "system_program", desc = "System Program")]
-                AccountMeta::new_readonly(ctx.accounts.system_program.key(), false),
-                // #[account(10, name = "sysvar_instructions", desc = "Instructions sysvar account")]
-                AccountMeta::new_readonly(ctx.accounts.sysvar_instructions.key(), false),
-                // #[account(11, optional, name = "spl_token_program", desc = "SPL Token Program")]
-                AccountMeta::new_readonly(ctx.accounts.token_program.key(), false),
-                // #[account(12, optional, name = "authorization_rules_program", desc = "Token Authorization Rules Program")]
-                AccountMeta::new_readonly(ctx.accounts.authorization_rules_program.key(), false),
-                // #[account(13, optional, name = "authorization_rules", desc = "Token Authorization Rules account")]
-                AccountMeta::new_readonly(ctx.accounts.authorization_rules.key(), false),
+
+    if user_original_mint_token_record.delegate_role == TokenDelegateRole::StakingV1 {
+        invoke(
+            &Instruction {
+                program_id: mpl_token_metadata::id(),
+                accounts: vec![
+                    // #[account(0, optional, writable, name="delegate_record", desc="Delegate record account")]
+                    AccountMeta::new_readonly(mpl_token_metadata::id(), false),
+                    // #[account(1, name="delegate", desc="Owner of the delegated account")]
+                    AccountMeta::new_readonly(stake_entry.key(), false),
+                    // #[account(2, writable, name = "metadata", desc = "Metadata account")]
+                    AccountMeta::new(ctx.accounts.mint_metadata.key(), false),
+                    // #[account(3, optional, name = "master_edition", desc = "Master Edition account")]
+                    AccountMeta::new_readonly(ctx.accounts.mint_edition.key(), false),
+                    // #[account(4, optional, writable, name = "token_record", desc = "Token record account")]
+                    AccountMeta::new(ctx.accounts.user_original_mint_token_record.key(), false),
+                    // #[account(5, name = "mint", desc = "Mint of metadata")]
+                    AccountMeta::new_readonly(ctx.accounts.original_mint.key(), false),
+                    // #[account(6, optional, writable, name = "token", desc = "Token account of mint")]
+                    AccountMeta::new(ctx.accounts.user_original_mint_token_account.key(), false),
+                    // #[account(7, signer, name = "authority", desc = "Update authority or token owner")]
+                    AccountMeta::new_readonly(ctx.accounts.user.key(), true),
+                    // #[account(8, signer, writable, name = "payer", desc = "Payer")]
+                    AccountMeta::new(ctx.accounts.user.key(), true),
+                    // #[account(9, name = "system_program", desc = "System Program")]
+                    AccountMeta::new_readonly(ctx.accounts.system_program.key(), false),
+                    // #[account(10, name = "sysvar_instructions", desc = "Instructions sysvar account")]
+                    AccountMeta::new_readonly(ctx.accounts.sysvar_instructions.key(), false),
+                    // #[account(11, optional, name = "spl_token_program", desc = "SPL Token Program")]
+                    AccountMeta::new_readonly(ctx.accounts.token_program.key(), false),
+                    // #[account(12, optional, name = "authorization_rules_program", desc = "Token Authorization Rules Program")]
+                    AccountMeta::new_readonly(ctx.accounts.authorization_rules_program.key(), false),
+                    // #[account(13, optional, name = "authorization_rules", desc = "Token Authorization Rules account")]
+                    AccountMeta::new_readonly(ctx.accounts.authorization_rules.key(), false),
+                ],
+                data: MetadataInstruction::Revoke(RevokeArgs::StakingV1).try_to_vec().unwrap(),
+            },
+            &[
+                stake_entry.to_account_info(),
+                ctx.accounts.mint_metadata.to_account_info(),
+                ctx.accounts.mint_edition.to_account_info(),
+                ctx.accounts.user_original_mint_token_record.to_account_info(),
+                ctx.accounts.original_mint.to_account_info(),
+                ctx.accounts.user_original_mint_token_account.to_account_info(),
+                ctx.accounts.user.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+                ctx.accounts.sysvar_instructions.to_account_info(),
+                ctx.accounts.token_program.to_account_info(),
+                ctx.accounts.authorization_rules_program.to_account_info(),
+                ctx.accounts.authorization_rules.to_account_info(),
             ],
-            data: MetadataInstruction::Revoke(RevokeArgs::StakingV1).try_to_vec().unwrap(),
-        },
-        &[
-            stake_entry.to_account_info(),
-            ctx.accounts.mint_metadata.to_account_info(),
-            ctx.accounts.mint_edition.to_account_info(),
-            ctx.accounts.user_original_mint_token_record.to_account_info(),
-            ctx.accounts.original_mint.to_account_info(),
-            ctx.accounts.user_original_mint_token_account.to_account_info(),
-            ctx.accounts.user.to_account_info(),
-            ctx.accounts.system_program.to_account_info(),
-            ctx.accounts.sysvar_instructions.to_account_info(),
-            ctx.accounts.token_program.to_account_info(),
-            ctx.accounts.authorization_rules_program.to_account_info(),
-            ctx.accounts.authorization_rules.to_account_info(),
-        ],
-    )?;
+        )?;
+    } else if user_original_mint_token_record.delegate_role == TokenDelegateRole::Migration {
+        invoke(
+            &Instruction {
+                program_id: mpl_token_metadata::id(),
+                accounts: vec![
+                    // #[account(0, optional, writable, name="delegate_record", desc="Delegate record account")]
+                    AccountMeta::new_readonly(mpl_token_metadata::id(), false),
+                    // #[account(1, name="delegate", desc="Owner of the delegated account")]
+                    AccountMeta::new_readonly(stake_entry.key(), false),
+                    // #[account(2, writable, name = "metadata", desc = "Metadata account")]
+                    AccountMeta::new(ctx.accounts.mint_metadata.key(), false),
+                    // #[account(3, optional, name = "master_edition", desc = "Master Edition account")]
+                    AccountMeta::new_readonly(ctx.accounts.mint_edition.key(), false),
+                    // #[account(4, optional, writable, name = "token_record", desc = "Token record account")]
+                    AccountMeta::new(ctx.accounts.user_original_mint_token_record.key(), false),
+                    // #[account(5, name = "mint", desc = "Mint of metadata")]
+                    AccountMeta::new_readonly(ctx.accounts.original_mint.key(), false),
+                    // #[account(6, optional, writable, name = "token", desc = "Token account of mint")]
+                    AccountMeta::new(ctx.accounts.user_original_mint_token_account.key(), false),
+                    // #[account(7, signer, name = "authority", desc = "Update authority or token owner")]
+                    AccountMeta::new_readonly(ctx.accounts.user.key(), true),
+                    // #[account(8, signer, writable, name = "payer", desc = "Payer")]
+                    AccountMeta::new(ctx.accounts.user.key(), true),
+                    // #[account(9, name = "system_program", desc = "System Program")]
+                    AccountMeta::new_readonly(ctx.accounts.system_program.key(), false),
+                    // #[account(10, name = "sysvar_instructions", desc = "Instructions sysvar account")]
+                    AccountMeta::new_readonly(ctx.accounts.sysvar_instructions.key(), false),
+                    // #[account(11, optional, name = "spl_token_program", desc = "SPL Token Program")]
+                    AccountMeta::new_readonly(ctx.accounts.token_program.key(), false),
+                    // #[account(12, optional, name = "authorization_rules_program", desc = "Token Authorization Rules Program")]
+                    AccountMeta::new_readonly(ctx.accounts.authorization_rules_program.key(), false),
+                    // #[account(13, optional, name = "authorization_rules", desc = "Token Authorization Rules account")]
+                    AccountMeta::new_readonly(ctx.accounts.authorization_rules.key(), false),
+                ],
+                data: MetadataInstruction::Revoke(RevokeArgs::MigrationV1).try_to_vec().unwrap(),
+            },
+            &[
+                stake_entry.to_account_info(),
+                ctx.accounts.mint_metadata.to_account_info(),
+                ctx.accounts.mint_edition.to_account_info(),
+                ctx.accounts.user_original_mint_token_record.to_account_info(),
+                ctx.accounts.original_mint.to_account_info(),
+                ctx.accounts.user_original_mint_token_account.to_account_info(),
+                ctx.accounts.user.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+                ctx.accounts.sysvar_instructions.to_account_info(),
+                ctx.accounts.token_program.to_account_info(),
+                ctx.accounts.authorization_rules_program.to_account_info(),
+                ctx.accounts.authorization_rules.to_account_info(),
+            ],
+        )?;
+    }
+
 
     Ok(())
 }

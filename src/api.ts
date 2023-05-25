@@ -1113,6 +1113,10 @@ export const unstakeAll = async (
         )
         .instruction();
       tx.add(ix);
+    } else if (mintMetadata?.tokenStandard === TokenStandard.ProgrammableNonFungible &&
+      mintMetadata.programmableConfig &&
+      tokenRecordData?.delegateRole === TokenDelegateRole.Migration) {
+
     } else {
       /////// non-programmable ///////
       if (
